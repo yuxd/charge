@@ -27,6 +27,7 @@ import Choose from '../../containers/android/Choose';
 import About from './../../containers/android/About';
 import HelpView from './../../containers/android/HelpView';
 import Main from './../../containers/android/Main';
+import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 
 import { Global } from '../../Global';
@@ -171,15 +172,5 @@ class App extends React.Component {
   }
 
 }
-function mapStateToProps(state) {
-  return {};
-}
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(appActions, dispatch);
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default App;

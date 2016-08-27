@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import store from 'react-native-simple-store';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
-import searchActions from '../../actions/SearchActions';
+import searchActions from '../../actions/searchActions';
 import Helper from '../../utils/helper';
 
 import { Global } from '../../Global';
