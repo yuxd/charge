@@ -51,6 +51,16 @@ const api = {
     FetchMethod.Get,
     parameter
   ),
+  saveCustomData: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/saveUserEXCharge`,
+    FetchMethod.Get,
+    parameter
+  ),
+  customOwnData: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/queryUserEXCharge`,
+    FetchMethod.Get,
+    parameter
+  ),
   chargeMapList: (parameter) => createFetch(
     `${appConfig.serviceRoot}Charge/charge/wechat/keyWordSearch`,
     FetchMethod.Get,

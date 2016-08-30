@@ -87,7 +87,7 @@ class App extends React.Component {
                 <Scene
                   key="detailInfo"
                   component={DetailInfo}
-                  title="位置详情"
+                  title="DetailInfo"
                   hideNavBar
                 />
                 <Scene

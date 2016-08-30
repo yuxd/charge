@@ -18,6 +18,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from 'react-native-button';
 import Helper from '../../utils/helper';
+import ChooseActions from '../../actions/ChooseActions';
+import { Global } from '../../Global';
 
 const styles = StyleSheet.create({
   thumb: {
@@ -129,198 +131,13 @@ class Choose extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      brands: [
-        [
-          {
-            name: '全部',
-            select: true,
-          },
-          {
-            name: '特斯拉',
-            select: false,
-          },
-          {
-            name: '腾势',
-            select: false,
-          },
-          {
-            name: '宝马',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '比亚迪(电动)',
-            select: false,
-          },
-          {
-            name: '荣威',
-            select: false,
-          },
-          {
-            name: '北汽',
-            select: false,
-          },
-          {
-            name: '众泰',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '比亚迪(混动)',
-            select: false,
-          },
-          {
-            name: '江铃',
-            select: false,
-          },
-          {
-            name: '江淮',
-            select: false,
-          },
-          {
-            name: '其他',
-            select: false,
-          },
-        ],
-      ],
-      chargeType: [
-        {
-          name: '全部',
-          select: true,
-        },
-        {
-          name: '快冲',
-          select: false,
-        },
-        {
-          name: '慢充',
-          select: false,
-        },
-      ],
-      parking: [
-        {
-          name: '全部',
-          select: true,
-        },
-        {
-          name: '免费',
-          select: false,
-        },
-        {
-          name: '付费',
-          select: false,
-        },
-      ],
-      property: [
-        {
-          name: '全部',
-          select: true,
-        },
-        {
-          name: '共用',
-          select: false,
-        },
-        {
-          name: '专用',
-          select: false,
-        },
-      ],
-      allPay: [
-        {
-          name: '全部',
-          select: true,
-        },
-      ],
-      quickPay: [
-        [
-          {
-            name: '免费',
-            select: false,
-          },
-          {
-            name: '现金',
-            select: false,
-          },
-          {
-            name: '微信',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '支付宝',
-            select: false,
-          },
-          {
-            name: '星星APP',
-            select: false,
-          },
-          {
-            name: '特来电APP',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '聚电桩APP',
-            select: false,
-          },
-          {
-            name: '电桩APP',
-            select: false,
-          },
-          {
-            name: '绿狗APP',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '依威能源APP',
-            select: false,
-          },
-          {
-            name: 'E APP',
-            select: false,
-          },
-          {
-            name: '其他APP',
-            select: false,
-          },
-        ],
-      ],
-      payCard: [
-        [
-          {
-            name: '国网普通卡',
-            select: false,
-          },
-          {
-            name: 'SGCC HW. card',
-            select: false,
-          },
-          {
-            name: '中国普天充值卡',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '小易充值卡',
-            select: false,
-          },
-          {
-            name: '易冲卡',
-            select: false,
-          },
-          {
-            name: '其他充值卡',
-            select: false,
-          },
-        ],
-      ],
+      brands: [],
+      chargeType: [],
+      parking: [],
+      property: [],
+      allPay: [],
+      quickPay: [],
+      payCard: [],
       toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
@@ -330,10 +147,19 @@ class Choose extends Component {
   }
 
   componentWillMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({});
+    this.setState({
+      brands: nextProps.brands,
+      chargeType: nextProps.chargeType,
+      parking: nextProps.parking,
+      property: nextProps.property,
+      allPay: nextProps.allPay,
+      quickPay: nextProps.quickPay,
+      payCard: nextProps.payCard,
+    });
   }
 
   handlePress(name) {
@@ -423,6 +249,82 @@ class Choose extends Component {
     }
     this.setState({ allPay: this.state.allPay });
     this.setState({ payCard: this.state.payCard });
+  }
+
+  saveCustom() {
+    const brands = this.state.brands;
+    const chargeType = this.state.chargeType;
+    const parking = this.state.parking;
+    const property = this.state.property;
+    const allPay = this.state.allPay;
+    const quickPay = this.state.quickPay;
+    const payCard = this.state.payCard;
+    let brandCar;
+    let type;
+    let pay;
+    let kind;
+    let paymentType = '';
+    for (const row of brands) {
+      for (const carName of row) {
+        if (carName.select) {
+          brandCar = carName.value;
+        }
+      }
+    }
+    for (const model of chargeType) {
+      if (model.select) {
+        type = model.value;
+      }
+    }
+    for (const payType of parking) {
+      if (payType.select) {
+        pay = payType.value;
+      }
+    }
+    for (const payKind of property) {
+      if (payKind.select) {
+        kind = payKind.value;
+      }
+    }
+    if (allPay[0].select) {
+      paymentType = allPay[0].value;
+    } else {
+      for (const rowQuick of quickPay) {
+        for (const rowQuickPay of rowQuick) {
+          if (rowQuickPay.select) {
+            if (paymentType) {
+              paymentType = `${paymentType}${rowQuickPay.value}|`;
+            } else {
+              paymentType = `${rowQuickPay.value}|`;
+            }
+          }
+        }
+      }
+      for (const rowCard of payCard) {
+        for (const rowPayCard of rowCard) {
+          if (rowPayCard.select) {
+            if (paymentType) {
+              paymentType = `${paymentType}${rowPayCard.value}|`;
+            } else {
+              paymentType = `${rowPayCard.value}|`;
+            }
+          }
+        }
+      }
+    }
+    if (paymentType.endsWith('|')) {
+      paymentType = paymentType.substring(0, paymentType.length - 1);
+    }
+    this.props.setCustomData({
+      access_token: Global.appState.user.accessToken,
+      parameter: {
+        parking_fee: pay,
+        payment: paymentType,
+        plot_kind: kind,
+        chain_code: brandCar,
+        charging_mode: type,
+      },
+    });
   }
 
   allPay(data, index) {
@@ -661,68 +563,85 @@ class Choose extends Component {
   }
 
   render() {
+    if (this.state.brands.length > 0) {
+      return (
+        <View style={{ flex: 1 }}>
+          <ScrollView >
+            <View>
+              <View style={styles.container}>
+                <Text style={styles.brand}>按车辆品牌</Text>
+                <View>
+                  {this.state.brands.map(this.test)}
+                </View>
+              </View>
+              <View style={styles.chargeContainer}>
+                <Text style={styles.brand}>按快冲慢充</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.chargeType.map(this.charge)}
+                </View>
+              </View>
+              <View style={styles.chargeContainer}>
+                <Text style={styles.brand}>按停车收费（元/小时）</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.parking.map(this.parking)}
+                </View>
+              </View>
+              <View style={styles.chargeContainer}>
+                <Text style={styles.brand}>按属性</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.property.map(this.property)}
+                </View>
+              </View>
+              <View style={styles.payContainer}>
+                <Text style={styles.brand}>按支付方式（可多选）</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.allPay.map(this.allPay)}
+                </View>
+                <Text style={styles.brand}>便捷支付</Text>
+                <View>
+                  {this.state.quickPay.map(this.quickPay)}
+                </View>
+                <Text style={styles.brand}>充值卡</Text>
+                <View>
+                  {this.state.payCard.map(this.payCard)}
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+          <ToolbarAndroid
+            style={styles.toolbar}
+          >
+            <View style={{ height: 56, flexDirection: 'row', alignItems: 'center' }}>
+              <Button
+                onPress={this.saveCustom}
+                style={{ marginLeft: 160, marginTop: 10 }}
+              >保 存
+              </Button>
+            </View>
+          </ToolbarAndroid>
+        </View>
+      );
+    }
     return (
-      <View style={{ flex: 1 }}>
-        <ScrollView >
-          <View>
-            <View style={styles.container}>
-              <Text style={styles.brand}>按车辆品牌</Text>
-              <View>
-                {this.state.brands.map(this.test)}
-              </View>
-            </View>
-            <View style={styles.chargeContainer}>
-              <Text style={styles.brand}>按快冲慢充</Text>
-              <View style={styles.flexContainer}>
-                {this.state.chargeType.map(this.charge)}
-              </View>
-            </View>
-            <View style={styles.chargeContainer}>
-              <Text style={styles.brand}>按停车收费（元/小时）</Text>
-              <View style={styles.flexContainer}>
-                {this.state.parking.map(this.parking)}
-              </View>
-            </View>
-            <View style={styles.chargeContainer}>
-              <Text style={styles.brand}>按属性</Text>
-              <View style={styles.flexContainer}>
-                {this.state.property.map(this.property)}
-              </View>
-            </View>
-            <View style={styles.payContainer}>
-              <Text style={styles.brand}>按支付方式（可多选）</Text>
-              <View style={styles.flexContainer}>
-                {this.state.allPay.map(this.allPay)}
-              </View>
-              <Text style={styles.brand}>便捷支付</Text>
-              <View>
-                {this.state.quickPay.map(this.quickPay)}
-              </View>
-              <Text style={styles.brand}>充值卡</Text>
-              <View>
-                {this.state.payCard.map(this.payCard)}
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        <ToolbarAndroid
-          style={styles.toolbar}
-        >
-          <View style={{ height: 56, flexDirection: 'row', alignItems: 'center' }}>
-            <Button>保存</Button>
-          </View>
-        </ToolbarAndroid>
-      </View>
+      <View/>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    brands: state.chooseReducer.brands,
+    chargeType: state.chooseReducer.chargeType,
+    parking: state.chooseReducer.parking,
+    property: state.chooseReducer.property,
+    allPay: state.chooseReducer.allPay,
+    quickPay: state.chooseReducer.quickPay,
+    payCard: state.chooseReducer.payCard,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return bindActionCreators(ChooseActions, dispatch);
 }
 
 export default connect(
