@@ -96,7 +96,7 @@ class Main extends Component {
   }
 
   mapToList() {
-
+    Actions.chargeList();
   }
 
   button() {
