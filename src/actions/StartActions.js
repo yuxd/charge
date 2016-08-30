@@ -18,8 +18,18 @@ const StartActions = {
             Global.appState = deepcopy(appStateDefault);
           }
           dispatch(UserManagementActions.setUser(Global.appState.user));
-          Actions.mainModule();
-        });
+          if (Global.appState.boolFirstLaunch) {
+            Actions.introduction();
+          } else {
+            Actions.mainModule();
+          }
+        }
+        )
+        // .then(res => {
+        //   Global.appState.boolFirstLaunch = false;
+        //   store.save('appState', Global.appState);
+        // }
+      //);
     },
 };
 

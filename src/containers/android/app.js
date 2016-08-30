@@ -12,7 +12,7 @@ import {
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Router, Scene, Modal, ActionConst } from 'react-native-router-flux';
 import { Provider, connect } from 'react-redux';
-import deepcopy from 'deepcopy'
+import deepcopy from 'deepcopy';
 import store from 'react-native-simple-store';
 import ChargeView from './../../containers/android/ChargeView';
 import routeReducerCreator from './../../reducers/routeReducerCreator';
@@ -25,6 +25,7 @@ import Choose from '../../containers/android/Choose';
 import About from './../../containers/android/About';
 import HelpView from './../../containers/android/HelpView';
 import Main from './../../containers/android/Main';
+import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 import ChargeList from '../../containers/android/ChargeList';
 import { Global } from '../../Global';
@@ -33,7 +34,6 @@ import Regist from './Regist';
 import UserAgreement from './UserAgreement';
 import FindPassword from './FindPassword';
 import Error from './Error';
-import Introduction from './Introduction';
 
 const styles = StyleSheet.create({
   textInput: {
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
 });
 class App extends React.Component {
   componentWillUnmount() {
+    Global.appState.boolFirstLaunch = false;
     Global.appState = deepcopy(Global.appState);
     store.save('appState', Global.appState);
   }
@@ -71,6 +72,7 @@ class App extends React.Component {
               <Scene key="regist" component={Regist} title="注册" hideNavBar={false}/>
               <Scene key="userAgreement" component={UserAgreement} title="用户协议" hideNavBar={false}/>
               <Scene key="findPassword" component={FindPassword} title="手机找回密码" hideNavBar={false}/>
+              <Scene key="introduction" component={Introduction} title="Introduction" hideNavBar/>
               <Scene key="mainModule" direction="horizontal">
                 <Scene
                   key="main"
@@ -78,12 +80,7 @@ class App extends React.Component {
                   title="Main"
                   hideNavBar
                 />
-                <Scene
-                  key="introduction"
-                  component={Introduction}
-                  title="Introduction"
-                  hideNavBar
-                />
+
                 <Scene
                   key="detailInfo"
                   component={DetailInfo}
@@ -143,5 +140,4 @@ class App extends React.Component {
     );
   }
 }
-
 export default App;

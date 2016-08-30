@@ -42,7 +42,7 @@ class NavButton extends Component {
 
 NavButton.propTypes = {
   onPress: React.PropTypes.func.isRequired,
-  text: React.PropTypes.Text,
+  text: React.PropTypes.string,
 };
 
 export default NavButton;
