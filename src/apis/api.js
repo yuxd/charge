@@ -13,7 +13,6 @@ const api = {
   ),
   getVisitorData: (parameter) => {
     let token = '';
-    console.log(Global);
     if (Global.appState && Global.appState.user) {
       token = Global.appState.user.accessToken;
     }
@@ -52,6 +51,11 @@ const api = {
     FetchMethod.Get,
     parameter
   ),
+  chargeMapList: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/keyWordSearch`,
+    FetchMethod.Get,
+    parameter
+  ),
   regist: (parameter) => createFetch(
     `${appConfig.serviceRoot}Charge/charge/users/regist/`,
     FetchMethod.Get,
@@ -82,7 +86,6 @@ async function callApi(apiService, success, fail) {
       throw new Error(`服务器错误:${jsonResult.errmsg}`);
     }
   } catch (error) {
-    console.log(error);
     if (fail) {
       fail(error.message);
     }
