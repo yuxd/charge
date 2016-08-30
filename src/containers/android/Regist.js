@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   smallImage: {
-    width: 16,
-    height: 16,
+    width: 20,
+    height: 20,
   },
   lineContainer: {
     backgroundColor: '#C5C1AA',
@@ -117,8 +117,13 @@ class Regist extends Component {
     }
   }
 
-  changeState(key, value) {
-    this.setState({ [key]: value });
+  onRegist() {
+    const parameter = {
+      name: this.state.userName,
+      password: this.state.password,
+      authenticationCode: this.state.code,
+    };
+    this.props.actions.registRequest(parameter);
   }
 
   getCode() {
@@ -132,6 +137,10 @@ class Regist extends Component {
     this.state.timer = setInterval(this.countDown, 1000);
   }
 
+  changeState(key, value) {
+    this.setState({ [key]: value });
+  }
+
   countDown() {
     if (this.state.count > 0) {
       this.setState({ count: this.state.count - 1 });
@@ -140,15 +149,6 @@ class Regist extends Component {
     this.setState({
       isCountDown: false,
     });
-  }
-
-  onRegist() {
-    const parameter = {
-      name: this.state.userName,
-      password: this.state.password,
-      authenticationCode: this.state.code,
-    };
-    this.props.actions.registRequest(parameter);
   }
 
   renderGetCodeText() {
@@ -178,7 +178,7 @@ class Regist extends Component {
         <View style={[styles.rowContainer, styles.rowBG]}>
           <View style={styles.smallImageContainer}>
             <Image
-              source={require('../../image/logo.png')}
+              source={require('../../image/login_icon_phonenumber.png')}
               style={styles.smallImage}
             />
           </View>
@@ -198,7 +198,7 @@ class Regist extends Component {
         <View style={[styles.rowContainer, styles.rowBG]}>
           <View style={styles.smallImageContainer}>
             <Image
-              source={require('../../image/logo.png')}
+              source={require('../../image/login_icon_password.png')}
               style={styles.smallImage}
             />
           </View>
@@ -220,7 +220,7 @@ class Regist extends Component {
         <View style={[styles.rowContainer, styles.rowBG]}>
           <View style={styles.smallImageContainer}>
             <Image
-              source={require('../../image/logo.png')}
+              source={require('../../image/login_icon_verifycode.png')}
               style={styles.smallImage}
             />
           </View>

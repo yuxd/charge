@@ -95,12 +95,17 @@ class FindPassword extends Component {
     Helper.bindMethod(this);
   }
 
-  changeState(key, value) {
-    this.setState({ [key]: value });
-  }
-
   onShowPassword() {
     this.setState({ isShowPassword: !this.state.isShowPassword });
+  }
+
+  onResetAndLogin() {
+    const parameter = {
+      cellNum: this.state.userName,
+      password: this.state.password,
+      authenticationCode: this.state.code,
+    };
+    this.props.actions.updatePasswordRequest(parameter);
   }
 
   getCode() {
@@ -124,13 +129,8 @@ class FindPassword extends Component {
     });
   }
 
-  onResetAndLogin() {
-    const parameter = {
-      cellNum: this.state.userName,
-      password: this.state.password,
-      authenticationCode: this.state.code,
-    };
-    this.props.actions.updatePasswordRequest(parameter);
+  changeState(key, value) {
+    this.setState({ [key]: value });
   }
 
   renderGetCodeText() {
@@ -158,14 +158,14 @@ class FindPassword extends Component {
     if (this.state.isShowPassword) {
       return (
         <Image
-          source={require('../../image/logo.png')}
+          source={require('../../image/login_icon_password.png')}
           style={styles.smallImage}
         />
       );
     }
     return (
       <Image
-        source={require('../../image/logo.png')}
+        source={require('../../image/login_icon_password.png')}
         style={styles.smallImage}
       />
     );
@@ -177,7 +177,7 @@ class FindPassword extends Component {
         <View style={[styles.rowContainer, styles.rowBG]}>
           <View style={styles.smallImageContainer}>
             <Image
-              source={require('../../image/logo.png')}
+              source={require('../../image/login_icon_phonenumber.png')}
               style={styles.smallImage}
             />
           </View>
@@ -197,7 +197,7 @@ class FindPassword extends Component {
         <View style={[styles.rowContainer, styles.rowBG]}>
           <View style={styles.smallImageContainer}>
             <Image
-              source={require('../../image/logo.png')}
+              source={require('../../image/login_icon_verifycode.png')}
               style={styles.smallImage}
             />
           </View>
@@ -224,7 +224,7 @@ class FindPassword extends Component {
         <View style={[styles.rowContainer, styles.rowBG]}>
           <View style={styles.smallImageContainer}>
             <Image
-              source={require('../../image/logo.png')}
+              source={require('../../image/login_icon_password.png')}
               style={styles.smallImage}
             />
           </View>

@@ -288,8 +288,7 @@ class ShellsDetail extends Component {
             {
               this.state.newLinkUrls.map(
                 (linkUrl, index) =>
-                (
-                  <View key={index}>
+                  (<View key={index}>
                     <TouchableHighlight
                       underlayColor="transparent"
                       key={index}
@@ -304,8 +303,7 @@ class ShellsDetail extends Component {
                       index < this.state.newLinkUrls.length - 1 ?
                         (<View style={styles.horizontalLine}/>) : (<View />)
                     }
-                  </View>
-                )
+                  </View>)
               )
             }
           </View>

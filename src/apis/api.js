@@ -3,7 +3,7 @@
  */
 import { FetchMethod, createFetch } from '../fetch/fetch';
 import appConfig from '../constants/appConfig';
-import Global from '../Global';
+import { Global } from '../Global';
 
 const api = {
   login: (parameter) => createFetch(
@@ -13,11 +13,9 @@ const api = {
   ),
   getVisitorData: (parameter) => {
     let token = '';
-    //console.log(Global);
-    //if (Global.appState && Global.appState.user) {
-    //  token = Global.appState.user.accessToken;
-    //}
-    token = '0005Y3SN00OCLJ5E219D0116393E17936455568B53DE1DA7';
+    if (Global.appState && Global.appState.user) {
+      token = Global.appState.user.accessToken;
+    }
     const newParameter = {
       parameter,
       access_token: token,
@@ -30,10 +28,9 @@ const api = {
   },
   getDetailByPid: (parameter) => {
     let token = '';
-    //if (Global.appState && Global.appState.user) {
-    //  token = Global.appState.user.accessToken;
-    //}
-    token = '0005Y3SN00OCLJ5E219D0116393E17936455568B53DE1DA7';
+    if (Global.appState && Global.appState.user) {
+      token = Global.appState.user.accessToken;
+    }
     const newParameter = {
       parameter,
       access_token: token,
@@ -46,6 +43,16 @@ const api = {
   },
   getAuthenticationCode: (parameter) => createFetch(
     `${appConfig.serviceRoot}Charge/charge/users/getAuthenticationCode`,
+    FetchMethod.Get,
+    parameter
+  ),
+  chargeList: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/associateSearch`,
+    FetchMethod.Get,
+    parameter
+  ),
+  chargeMapList: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/keyWordSearch`,
     FetchMethod.Get,
     parameter
   ),
@@ -79,7 +86,6 @@ async function callApi(apiService, success, fail) {
       throw new Error(`服务器错误:${jsonResult.errmsg}`);
     }
   } catch (error) {
-    console.log(error);
     if (fail) {
       fail(error.message);
     }

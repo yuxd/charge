@@ -26,6 +26,7 @@ import HelpView from './../../containers/android/HelpView';
 import Main from './../../containers/android/Main';
 import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
+import ChargeList from '../../containers/android/ChargeList';
 import { Global } from '../../Global';
 import imageViewPage from '../../containers/android/imageViewPager';
 import Regist from './Regist';
@@ -54,7 +55,7 @@ class App extends React.Component {
   }
 
   test1() {
-    console.log(2222);
+
   }
 
   render() {
@@ -76,7 +77,7 @@ class App extends React.Component {
                   hideNavBar
                 />
                 <Scene
-                  key="Introduction"
+                  key="introduction"
                   component={Introduction}
                   title="Introduction"
                   hideNavBar
@@ -95,7 +96,7 @@ class App extends React.Component {
                 />
               </Scene>
               <Scene
-                key="Choose"
+                key="choose"
                 component={Choose}
                 title="个人定制"
                 rightTitle="重置"
@@ -103,27 +104,31 @@ class App extends React.Component {
                 hideNavBar={false}
               />
               <Scene
-                key="SearchList"
+                key="searchList"
                 component={SearchList}
-                hideNavBar={false}
-                renderTitle={this.title}
+                hideNavBar
               />
               <Scene
-                key="About" component={About}
+                key="about" component={About}
                 title="关于"
                 hideNavBar={false}
               />
               <Scene
-                key="HelpView"
+                key="helpView"
                 component={HelpView}
                 title="帮助"
                 hideNavBar={false}
               />
               <Scene
-                key="ChargeView"
+                key="chargeView"
                 component={ChargeView}
                 title="桩家视界"
                 hideNavBar={false}
+              />
+              <Scene
+                key="chargeList"
+                component={ChargeList}
+                hideNavBar
               />
             </Scene>
             <Scene
