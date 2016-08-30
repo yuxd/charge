@@ -116,7 +116,7 @@ class ShellsDetail extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       show: nextProps.showOrHide,
-      data: nextProps.singeData[0],
+      data: nextProps.singeData,
     });
   }
 
@@ -155,6 +155,47 @@ class ShellsDetail extends Component {
       });
     }
   }
+  renderCar(car, i) {
+    let image = null;
+    switch (car) {
+      case '400F':
+        image = require('../../image/bmw.png');
+        break;
+      case '348D':
+        image = require('../../image/tesla.png');
+        break;
+      case '3701':
+        image = require('../../image/tengshi.png');
+        break;
+      default:
+        break;
+    }
+    return (
+      <Image key={i} source={image}/>
+    );
+  }
+
+  renderKindCode() {
+    const data = this.state.data;
+    let image = null;
+    if (data.plotKind === 0) {
+      if (data.kindCode === '1') {
+        image = require('../../image/charge_station_common.png');
+      } else if (data.kindCode === '5') {
+        image = require('../../image/charge_pole_common.png');
+      }
+    } else if (data.plotKind === 1) {
+      if (data.kindCode === '1') {
+        image = require('../../image/charge_station_special.png');
+      } else if (data.kindCode === '5') {
+        image = require('../../image/charge_pole_special.png');
+      }
+    }
+
+    return (
+      <Image source={image}/>
+    );
+  }
 
   render() {
     const data = this.state.data;
@@ -173,38 +214,19 @@ class ShellsDetail extends Component {
         <View style={styles.subView}>
           <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <View>
-              <Image
-                source={
-                  data.plotKind === 0 ?
-                  require('../../image/charge_station_common.png') :
-                  require('../../image/ex_station_special.png')}
-              />
+              {
+                this.renderKindCode()
+              }
             </View>
             <View style={{ width: 200 }}>
               <Text style={styles.nameTitle}>{data.name}</Text>
             </View>
             <View>
-              {
-                data.carBrand.map(
-                  (car, i) => {
-                    if (car === '') {
-                      return null;
-                    }
-
-                    return (
-                      <View key={i} style={{ flexDirection: 'row' }}>
-                        <Image
-                          source={
-                            car === '1' ?
-                            require('../../image/bmw.png') :
-                            require('../../image/tesla.png')
-                            }
-                        />
-                      </View>
-                    );
-                  }
-                )
-              }
+              <View style={{ flexDirection: 'row' }}>
+                {
+                     data.carBrand.map(this.renderCar)
+                }
+              </View>
             </View>
           </View>
           <View style={{ flexDirection: 'row' }}>
@@ -216,25 +238,29 @@ class ShellsDetail extends Component {
             <View style={{ marginLeft: 30, marginTop: 5 }}>
               <Image
                 source={
-                  data.state === 0 ?
+                  data.state === '0' ?
                   require('../../image/charge_avail.png') :
                   require('../../image/charge_unavail.png')}
               />
             </View>
             <View style={{ width: 150, flexDirection: 'row' }}>
-              {
-                data.sockerParams.map((socker, i) =>
-                  (<View key={i} style={{ flexDirection: 'row', marginLeft: 5 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text >{socker.mode === '0' ? '慢充' : '快充'}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text >{socker.chargingplot_count}</Text>
-                      <Text >个</Text>
-                    </View>
-                  </View>)
-                )
-              }
+              <View style={{ flexDirection: 'row', marginLeft: 5 }}>
+                <View style={{ flexDirection: 'row' }}>
+                  {
+                    data.socker_num.sDCquick_num + data.socker_num.sACquick_num > 0 ?
+                      (<Text style={{ margin: 5, fontSize: 15, fontWeight: 'bold' }}>
+                          快充{data.socker_num.sDCquick_num + data.socker_num.sACquick_num}个</Text>
+                      ) : null
+                  }
+                  {
+                    data.socker_num.sACslow_num + data.socker_num.sDCslow_num > 0 ?
+                      (<Text style={{ margin: 5, fontSize: 15, fontWeight: 'bold' }}>
+                        慢充{data.socker_num.sACslow_num + data.socker_num.sDCslow_num}个</Text>
+                      ) : null
+                  }
+                </View>
+              </View>
+
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Image style={{ marginTop: 5 }} source={require('../../image/xposition.png')}/>
@@ -244,9 +270,9 @@ class ShellsDetail extends Component {
           <View style={{ flexDirection: 'row' }}>
             <View style={{ marginLeft: 30, marginTop: 5 }}>
               <Image
-                source={data.state === 0 ?
-                  require('../../image/text_paytype.png') :
-                  require('../../image/charge_unavail.png')}
+                source={
+                  require('../../image/text_paytype.png')
+                }
               />
             </View>
             <View>
