@@ -41,25 +41,40 @@ class DetailMapDirection extends Component {
 
     const annotations = [];
     const showMarkerArr = [];
-    this.props.singeData.forEach(item => {
-      showMarkerArr.push({
-        coordinates: [item.location.latitude, item.location.longitude],
-        id: item.pid.toString(),
-        title: '',
-        type: 'point',
-        annotationImage: {
-          source: { uri: 'https://cldup.com/7NLZklp8zS.png' },
-          height: 25,
-          width: 25,
-        },
-      });
-    });
+    const item = this.props.singeData;
+    const mark = {
+      coordinates: [item.location.latitude, item.location.longitude],
+      id: item.pid.toString(),
+      title: '',
+      type: 'point',
+      annotationImage: {
+        source: {},
+        height: 25,
+        width: 25,
+      },
+    };
+    if (item.plotKind === 0) { // 0:公共1：专用
+      if (item.kindCode === '1') { // 1（充电站） 2（充换电站） 4（换电站） 5（充电桩）
+        mark.annotationImage.source = { uri: 'charge_station_common' };
+      }
+      if (item.kindCode === '5') {
+        mark.annotationImage.source = { uri: 'charge_pole_common' };
+      }
+    } else {
+      if (item.kindCode === '1') { // 1（充电站） 2（充换电站） 4（换电站） 5（充电桩）
+        mark.annotationImage.source = { uri: 'charge_station_special' };
+      }
+      if (item.kindCode === '5') {
+        mark.annotationImage.source = { uri: 'charge_pole_special' };
+      }
+    }
+    showMarkerArr.push(mark);
     // 初始状态
     this.state = {
       singeData: this.props.singeData,
       center: {
-        latitude: this.props.singeData[0].location.latitude,
-        longitude: this.props.singeData[0].location.longitude,
+        latitude: this.props.singeData.location.latitude,
+        longitude: this.props.singeData.location.longitude,
       },
       zoom: 11,
       userTrackingMode: Mapbox.userTrackingMode.none,
@@ -70,19 +85,34 @@ class DetailMapDirection extends Component {
 
   componentWillReceiveProps(nextProps) {
     const showMarkerArr = [];
-    nextProps.singeData.forEach(item => {
-      showMarkerArr.push({
-        coordinates: [item.location.latitude, item.location.longitude],
-        id: item.pid.toString(),
-        title: '',
-        type: 'point',
-        annotationImage: {
-          source: { uri: 'https://cldup.com/7NLZklp8zS.png' },
-          height: 25,
-          width: 25,
-        },
-      });
-    });
+    const item = nextProps.singeData;
+    const mark = {
+      coordinates: [item.location.latitude, item.location.longitude],
+      id: item.pid.toString(),
+      title: '',
+      type: 'point',
+      annotationImage: {
+        source: {},
+        height: 25,
+        width: 25,
+      },
+    };
+    if (item.plotKind === 0) { // 0:公共1：专用
+      if (item.kindCode === '1') { // 1（充电站） 2（充换电站） 4（换电站） 5（充电桩）
+        mark.annotationImage.source = { uri: 'charge_station_common' };
+      }
+      if (item.kindCode === '5') {
+        mark.annotationImage.source = { uri: 'charge_pole_common' };
+      }
+    } else {
+      if (item.kindCode === '1') { // 1（充电站） 2（充换电站） 4（换电站） 5（充电桩）
+        mark.annotationImage.source = { uri: 'charge_station_special' };
+      }
+      if (item.kindCode === '5') {
+        mark.annotationImage.source = { uri: 'charge_pole_special' };
+      }
+    }
+    showMarkerArr.push(mark);
     this.setState({
       annotations: [...this.state.annotations, ...showMarkerArr],
     });
@@ -105,6 +135,7 @@ class DetailMapDirection extends Component {
           zoomEnabled
           showsUserLocation
           styleURL={Mapbox.mapStyles.streets}
+          annotations={this.state.annotations}
           annotationsAreImmutable
         />
       </View>

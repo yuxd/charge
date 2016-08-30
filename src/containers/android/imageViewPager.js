@@ -25,7 +25,6 @@ const dataSource = new ViewPager.DataSource({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     padding: 5,
     height: 40,
@@ -50,6 +49,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#FFFFFF',
     alignSelf: 'center',
+    lineHeight: 30,
+    textAlign: 'center',
   },
 });
 
@@ -57,7 +58,7 @@ class imageViewPager extends React.Component {
   constructor(props) {
     super(props);
     const pic = [];
-    this.props.singeData[0].plotPic.forEach(data => {
+    this.props.singeData.plotPic.forEach(data => {
       pic.push(`http://chargingtest.navinfo.com/Charge/resources/photo/${data.url}`);
     });
 
@@ -71,7 +72,7 @@ class imageViewPager extends React.Component {
   componentWillReceiveProps(nextProps) {
     const pic = [];
     if (this.state.singeData !== nextProps.singeData) {
-      nextProps.singeData[0].plotPic.forEach(data => {
+      nextProps.singeData.plotPic.forEach(data => {
         pic.push(`http://chargingtest.navinfo.com/Charge/resources/photo/${data.url}`);
       });
     }
@@ -95,17 +96,11 @@ class imageViewPager extends React.Component {
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
           <View>
-            <TouchableHighlight
-              underlayColor="transparent"
-              onPress={this.backDetail}
-            >
-              <Image
-                source={require('../../image/back.png')}
-                style={styles.avatarimage}
-              />
+            <TouchableHighlight underlayColor="transparent" onPress={this.backDetail}>
+              <Image source={require('../../image/back.png')} style={styles.avatarimage}/>
             </TouchableHighlight>
           </View>
-          <View style={{ width: 300 }}>
+          <View style={{ alignItems: 'center', width: 300 }}>
             <Text style={styles.textTitle}>图片浏览</Text>
           </View>
         </View>

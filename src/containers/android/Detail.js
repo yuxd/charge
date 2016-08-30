@@ -135,7 +135,7 @@ class Detail extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      singeData: nextProps.singeData[0],
+      singeData: nextProps.singeData,
     });
   }
 
@@ -172,36 +172,47 @@ class Detail extends React.Component {
 
   renderSocker(socker, i) {
     let image = null;
+    let type = '';
     switch (socker.plugType) {
       case '0':
         image = require('../../image/socket_jiaoliudian3kongjiayong.png');
+        type = '交流3孔家用';
         break;
       case '1':
         image = require('../../image/socket_guobiaojiaoliudian7kong.png');
+        type = '国标7孔';
         break;
       case '2':
         image = require('../../image/socket_guobiaozhiliudian9kong.png');
+        type = '国标9孔';
         break;
       case '3':
         image = require('../../image/socket_meishijiaoliu5kong.png');
+        type = '美式5孔';
         break;
       case '4':
         image = require('../../image/socket_meishizhiliucombo.png');
+        type = '美式Combo';
         break;
       case '5':
         image = require('../../image/socket_oushijiaoliu7kong.png');
+        type = '欧式7孔';
         break;
       case '6':
         image = require('../../image/socket_oshizhiliucombo.png');
+        type = '欧式Combo';
         break;
       case '7':
         image = require('../../image/socket_rishizhiliuchademo.png');
+        type = '日式CHAdeMO';
         break;
       case '8':
         image = require('../../image/socket_tesilachachao.png');
+        type = '特斯拉专用';
         break;
       case '9':
         image = require('../../image/socket_qita.png');
+        type = '其它插槽';
         break;
       default:
         break;
@@ -218,7 +229,7 @@ class Detail extends React.Component {
           <Text
             style={{ margin: 5 }}
           >
-            {socker.mode === '0' ? '慢充' : '快充'}{socker.acdc === '0' ? '交流' : '直流'} {socker.plugType}
+            {socker.mode === '0' ? '慢充' : '快充'}{socker.acdc === '0' ? '交流' : '直流'} {type}
           </Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
@@ -228,9 +239,66 @@ class Detail extends React.Component {
       </View>);
   }
 
+  renderCar(car, i) {
+    let image = null;
+    switch (car) {
+      case '400F':
+        image = require('../../image/bmw.png');
+        break;
+      case '348D':
+        image = require('../../image/tesla.png');
+        break;
+      case '3701':
+        image = require('../../image/tengshi.png');
+        break;
+      default:
+        break;
+    }
+    return (
+      <Image
+        key={i}
+        source={image}
+        style={{ width: 25, height: 25, margin: 5 }}
+      />
+    );
+  }
+
+  renderService() {
+    const data = this.state.singeData;
+    if (!data) {
+      return null;
+    }
+    let serviceProIcon = '';
+    let image = '';
+    if (data.servicePro_icon !== '') {
+      serviceProIcon = `http://chargingtest.navinfo.com/Charge${data.servicePro_icon}`;
+    }
+    if (data.servicePro === '宝马') {
+      image = require('../../image/bmw.png');
+    } else if (data.servicePro === '特斯拉') {
+      image = require('../../image/tesla.png');
+    } else if (data.servicePro === '腾势') {
+      image = require('../../image/tengshi.png');
+    }
+    let lastImage = '';
+    if (serviceProIcon !== '') {
+      lastImage = {
+        uri: serviceProIcon
+      };
+    } else if (image !== '') {
+      lastImage = image;
+    }
+
+    return (
+      <View>
+        <Image source={lastImage} style={styles.avatarimage}/>
+      </View>
+    );
+  }
+
   render() {
     const tabNames = this.state.tabNames;
-    const data = this.state.singeData[0];
+    const data = this.state.singeData;
     if (!data) {
       return null;
     }
@@ -280,26 +348,9 @@ class Detail extends React.Component {
           <View style={{ width: 240, marginLeft: 5 }}>
             <Text style={styles.nameTitle}>{data.name}</Text>
             {
-              data.carBrand.map(
-                (car, i) => {
-                  if (car === '') {
-                    return null;
-                  }
-                  return (
-                    <View style={{ flexDirection: 'row' }}>
-                      <Image
-                        source={
-                        car === '1' ?
-                        require('../../image/bmw.png') :
-                        require('../../image/tesla.png')
-                      }
-                      />
-                    </View>
-                  );
-                }
-              )
+              data.carBrand.map(this.renderCar)
             }
-            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+            <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Image source={require('../../image/xposition.png')}/>
               <Text style={{ color: '#FFFFFF', fontSize: 13 }}>{data.distance}km</Text>
             </View>
@@ -364,12 +415,23 @@ class Detail extends React.Component {
             <Image source={require('../../image/socket_icon.png')}/>
           </View>
           <View style={{ width: 280 }}>
-            <Text style={{ margin: 5, fontSize: 15, fontWeight: 'bold' }}>慢充2</Text>
+            {
+              data.socker_num.sDCquick_num + data.socker_num.sACquick_num > 0 ?
+                (<Text style={{ margin: 5, fontSize: 15, fontWeight: 'bold' }}>
+                    快充{data.socker_num.sDCquick_num + data.socker_num.sACquick_num}个</Text>
+                ) : null
+            }
+            {
+              data.socker_num.sACslow_num + data.socker_num.sDCslow_num > 0 ?
+                (<Text style={{ margin: 5, fontSize: 15, fontWeight: 'bold' }}>
+                    慢充{data.socker_num.sACslow_num + data.socker_num.sDCslow_num}个</Text>
+                ) : null
+            }
           </View>
           <View style={{ flex: 1, marginTop: 10 }}>
             <Image
               source={
-                data.state === 0 ?
+                data.state === '0' ?
                 require('../../image/charge_avail.png') :
                 require('../../image/charge_unavail.png')
               }
@@ -459,7 +521,7 @@ class Detail extends React.Component {
                 </View>)
               }
               {
-                data.servicePro.length === 0 ? null : (<View>
+                data.servicePro === '' ? null : (<View>
                   <View style={{ borderBottomColor: '#e5e5e5', borderBottomWidth: 1 }}/>
                   <View style={styles.content}>
                     <View style={{ width: 100 }}>
@@ -468,6 +530,9 @@ class Detail extends React.Component {
                     <View >
                       <Text style={{ margin: 5 }}>{data.servicePro}</Text>
                     </View>
+                    {
+                      this.renderService()
+                    }
                   </View>
                 </View>)
               }
