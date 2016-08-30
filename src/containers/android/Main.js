@@ -20,6 +20,8 @@ import { Actions } from 'react-native-router-flux';
 import Map from './MapContainer';
 import LeftMenu from './LeftMenu';
 import ShellsDetail from './ShellsDetail';
+import ChooseActions from '../../actions/ChooseActions';
+import { Global } from '../../Global';
 
 const styles = StyleSheet.create({
   container: {
@@ -92,7 +94,9 @@ class Main extends Component {
   }
 
   imagePress() {
-    Actions.choose();
+    this.props.actions.getCustomOwnData({
+      access_token: Global.appState.user.accessToken,
+    });
   }
 
   mapToList() {
@@ -162,7 +166,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    actions: bindActionCreators(ChooseActions, dispatch),
+  };
 }
 
 export default connect(
