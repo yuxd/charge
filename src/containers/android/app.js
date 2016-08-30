@@ -1,7 +1,7 @@
 /**
  * Created by liwanchong on 2016/8/2.
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Image,
@@ -9,9 +9,10 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import {createStore, applyMiddleware, compose} from 'redux';
-import {Router, Scene, Modal, ActionConst} from 'react-native-router-flux';
-import {Provider, connect} from 'react-redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { Router, Scene, Modal, ActionConst } from 'react-native-router-flux';
+import { Provider, connect } from 'react-redux';
+import deepcopy from 'deepcopy';
 import store from 'react-native-simple-store';
 import ChargeView from './../../containers/android/ChargeView';
 import routeReducerCreator from './../../reducers/routeReducerCreator';
@@ -27,7 +28,7 @@ import Main from './../../containers/android/Main';
 import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 import ChargeList from '../../containers/android/ChargeList';
-import {Global} from '../../Global';
+import { Global } from '../../Global';
 import imageViewPage from '../../containers/android/imageViewPager';
 import Regist from './Regist';
 import UserAgreement from './UserAgreement';
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
 class App extends React.Component {
   componentWillUnmount() {
     Global.appState.boolFirstLaunch = false;
+    Global.appState = deepcopy(Global.appState);
     store.save('appState', Global.appState);
   }
 

@@ -6,29 +6,27 @@ import { Actions } from 'react-native-router-flux';
 import Toast from 'react-native-root-toast';
 import { api, callApi } from '../apis/api';
 import actionEnum from '../constants/actionEnum';
-import mapAction from '../actions/mapAction';
 
-const chargeListActions = {
-  setChargeList: createAction(actionEnum.SET_CHARGE_LIST),
-  setLocationToMap: createAction(actionEnum.SET_LOCATION_TO_MAP),
-  setChargeMapList: createAction(actionEnum.SET_CHARGE_MAP_LIST),
-  getChargeList: (parameter) =>
+const chooseActions = {
+  setCustomOwnData: createAction(actionEnum.SET_CUSTOM_OWN_DATA),
+
+  setCustomData: (parameter) =>
     dispatch => {
       callApi(
-        api.chargeList(parameter),
+        api.saveCustomData(parameter),
         data => {
-          dispatch(chargeListActions.requestChargeListSuccess(data));
+          dispatch(chooseActions.requestCustomDataSuccess(data));
         },
         err => {
-          dispatch(chargeListActions.requestChargeListFail(err));
+          dispatch(chooseActions.requestCustomDataFail(err));
         }
       );
     },
-  requestChargeListSuccess: (data) =>
+  requestCustomDataSuccess: (data) =>
     dispatch => {
-      dispatch(chargeListActions.setChargeList(data));
+      Actions.mainModule();
     },
-  requestChargeListFail: (err) =>
+  requestCustomDataFail: (err) =>
     dispatch => {
       Toast.show(err, {
         duration: Toast.durations.LONG, // toast显示时长
@@ -39,23 +37,24 @@ const chargeListActions = {
         delay: 0, // toast显示的延时
       });
     },
-  getChargeDesc: (parameter) =>
+  getCustomOwnData: (parameter) =>
     dispatch => {
       callApi(
-        api.getVisitorData(parameter),
+        api.customOwnData(parameter),
         data => {
-          dispatch(chargeListActions.requestChargeListDescSuccess(data));
+          dispatch(chooseActions.requestCustomOwnDataSuccess(data));
         },
         err => {
-          dispatch(chargeListActions.requestChargeListDescFail(err));
+          dispatch(chooseActions.requestCustomOwnDataFail(err));
         }
       );
     },
-  requestChargeListDescSuccess: (data) =>
+  requestCustomOwnDataSuccess: (data) =>
     dispatch => {
-      dispatch(mapAction.getSingleData({ showOrHide: false, data }));
+      Actions.choose();
+      dispatch(chooseActions.setCustomOwnData(data));
     },
-  requestChargeListDescFail: (err) =>
+  requestCustomOwnDataFail: (err) =>
     dispatch => {
       Toast.show(err, {
         duration: Toast.durations.LONG, // toast显示时长
@@ -69,4 +68,4 @@ const chargeListActions = {
 
 };
 
-export default chargeListActions;
+export default chooseActions;
