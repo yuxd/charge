@@ -1,7 +1,7 @@
 /**
  * Created by liwanchong on 2016/8/2.
  */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Image,
@@ -9,9 +9,9 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import { createStore, applyMiddleware, compose } from 'redux';
-import { Router, Scene, Modal, ActionConst } from 'react-native-router-flux';
-import { Provider, connect } from 'react-redux';
+import {createStore, applyMiddleware, compose} from 'redux';
+import {Router, Scene, Modal, ActionConst} from 'react-native-router-flux';
+import {Provider, connect} from 'react-redux';
 import store from 'react-native-simple-store';
 import ChargeView from './../../containers/android/ChargeView';
 import routeReducerCreator from './../../reducers/routeReducerCreator';
@@ -27,7 +27,7 @@ import Main from './../../containers/android/Main';
 import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 import ChargeList from '../../containers/android/ChargeList';
-import { Global } from '../../Global';
+import {Global} from '../../Global';
 import imageViewPage from '../../containers/android/imageViewPager';
 import Regist from './Regist';
 import UserAgreement from './UserAgreement';
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
 });
 class App extends React.Component {
   componentWillUnmount() {
+    Global.appState.boolFirstLaunch = false;
     store.save('appState', Global.appState);
   }
 
@@ -69,6 +70,7 @@ class App extends React.Component {
               <Scene key="regist" component={Regist} title="注册" hideNavBar={false}/>
               <Scene key="userAgreement" component={UserAgreement} title="用户协议" hideNavBar={false}/>
               <Scene key="findPassword" component={FindPassword} title="手机找回密码" hideNavBar={false}/>
+              <Scene key="introduction" component={Introduction} title="Introduction" hideNavBar/>
               <Scene key="mainModule" direction="horizontal">
                 <Scene
                   key="main"
@@ -76,12 +78,7 @@ class App extends React.Component {
                   title="Main"
                   hideNavBar
                 />
-                <Scene
-                  key="introduction"
-                  component={Introduction}
-                  title="Introduction"
-                  hideNavBar
-                />
+
                 <Scene
                   key="detailInfo"
                   component={DetailInfo}
