@@ -14,5 +14,4 @@ dependencies:
 
 test:
   override:
-    - npm run lint
-    - react-native bundle
+    - npm run android
