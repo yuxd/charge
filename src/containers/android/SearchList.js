@@ -72,22 +72,31 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
 
-  textinput: {
+  textInputView: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    color: '#e5e5e5',
+    borderRadius: 5,
+
+  },
+  textInput: {
     fontSize: 16,
+    marginTop: -10,
+    color: '#e5e5e5',
   },
 
   logintext: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   search: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
 });
 
@@ -138,6 +147,17 @@ class SearchList extends Component {
       Global.appState.searchHistory.list.push(this.state.searchText);
     }
     this.setState({ history: Global.appState.searchHistory });
+    this.props.getKeyListOfCharge({
+      access_token: Global.appState.user.accessToken,
+      parameter: {
+        radius: 5000,
+        name: this.state.searchText,
+        region: '北京',
+        latitude: 40.008456800067,
+        longitude: 116.47474416608,
+      },
+    });
+    Actions.pop();
   }
 
   pressData(data) {
@@ -190,19 +210,21 @@ class SearchList extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Button style={styles.logintext} onPress={this.back}>返回</Button>
-          <TextInput
-            value={this.state.searchText}
-            onChangeText={text => {
-              this.changeState('searchText', text);
-            }}
-            placeholder="搜索地点"
-            placeholderTextColor="#E0E0E0"
-            onSubmitEditing={this.search}
-            style={styles.textinput}
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-            autoFocus
-          />
+          <View style={styles.textInputView}>
+            <TextInput
+              value={this.state.searchText}
+              onChangeText={text => {
+                this.changeState('searchText', text);
+              }}
+              placeholder="搜索地点"
+              placeholderTextColor="#E0E0E0"
+              onSubmitEditing={this.search}
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              keyboardType="default"
+              autoFocus
+            />
+          </View>
           <Button style={styles.search} onPress={this.back}>取消</Button>
         </View>
         <ScrollView>
@@ -213,13 +235,13 @@ class SearchList extends Component {
         <View>
           {
             this.state.history.list.map((text, i) =>
-              (<View style={{ flexDirection: 'row' }}>
+              (<View style={{ flexDirection: 'row' }} key={i}>
                 <View style={{ flex: 1 }}>
                   <Image
                     source={require('../../image/history.png')}
                   />
                 </View>
-                <View style={{ flex: 8, underlineColorAndroid: 'gray' }}>
+                <View style={{ flex: 8 }}>
                   <Text key={text + i} style={{ color: '#000000' }}>{text}</Text>
                 </View>
                 <View style={{ flex: 1 }}>

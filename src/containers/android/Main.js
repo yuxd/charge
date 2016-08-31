@@ -41,22 +41,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  textinput: {
+  textInputView: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    color: '#e5e5e5',
-    fontSize: 16,
-  },
+    borderRadius: 5,
 
+  },
+  textInput: {
+    fontSize: 16,
+    marginTop: -10,
+    color: '#e5e5e5',
+  },
   logintext: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   search: {
     color: '#FFFFFF',
-    padding: 5,
+    alignItems: 'center',
     fontSize: 16,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   image: {
     width: 50,
@@ -128,15 +136,17 @@ class Main extends Component {
       >
         <View style={styles.container}>
           <View style={styles.header}>
-            <Button style={styles.logintext} onPress={this.openDrawer}>登 录</Button>
-            <TextInput
-              placeholder="搜索地点"
-              placeholderTextColor="#E0E0E0"
-              style={styles.textinput}
-              underlineColorAndroid="transparent"
-              keyboardType="default"
-              onFocus={this.search}
-            />
+            <Button style={styles.logintext} onPress={this.openDrawer}>登录</Button>
+            <View style={styles.textInputView}>
+              <TextInput
+                placeholder="搜索地点"
+                placeholderTextColor="#E0E0E0"
+                style={styles.textInput}
+                underlineColorAndroid="transparent"
+                keyboardType="default"
+                onFocus={this.search}
+              />
+            </View>
             {this.button()}
           </View>
           <View style={styles.map}>
