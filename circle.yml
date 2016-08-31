@@ -20,4 +20,4 @@ test:
   override:
     - npm run lint
     - cd android
-    - ./android/gradlew install release
+    - ./gradlew install release
