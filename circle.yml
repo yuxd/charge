@@ -15,5 +15,5 @@ dependencies:
 test:
   override:
     - npm run lint
-    - cd android
+    - cd ./android
     - gradlew install release
