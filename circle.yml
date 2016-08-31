@@ -1,17 +1,11 @@
 machine:
   node:
     version: 4.4.5
-  java:
-    version: oraclejdk8
 
 dependencies:
   override:
-    - chmod +x ./android/gradlew
-    - ./android/gradlew dependencies
     - npm install
-  cache_directories:
-    - "/usr/local/android-sdk-linux"
 
 test:
   override:
-    - ./android/gradlew assembleRelease
+    - npm run lint
