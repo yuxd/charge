@@ -23,13 +23,7 @@ const StartActions = {
           } else {
             Actions.mainModule();
           }
-        }
-        )
-        // .then(res => {
-        //   Global.appState.boolFirstLaunch = false;
-        //   store.save('appState', Global.appState);
-        // }
-      //);
+        });
     },
 };
 

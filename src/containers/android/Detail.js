@@ -283,7 +283,7 @@ class Detail extends React.Component {
     let lastImage = '';
     if (serviceProIcon !== '') {
       lastImage = {
-        uri: serviceProIcon
+        uri: serviceProIcon,
       };
     } else if (image !== '') {
       lastImage = image;
