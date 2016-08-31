@@ -11,8 +11,13 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.0"
     - echo y | android update sdk --no-ui --all --filter "android-24"
     - chmod +x ./android/gradlew
+    - ./android/gradlew dependencies
+    - npm install
+  cache_directories:
+    - "/usr/local/android-sdk-linux"
 
 test:
   override:
     - npm run lint
+    - cd android
     - ./android/gradlew install release
