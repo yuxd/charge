@@ -6,10 +6,6 @@ machine:
 
 dependencies:
   override:
-    - echo y | android update sdk --no-ui --all --filter "tools"
-    - echo y | android update sdk --no-ui --all --filter "platform-tools"
-    - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.0"
-    - echo y | android update sdk --no-ui --all --filter "android-24"
     - chmod +x ./android/gradlew
     - ./android/gradlew dependencies
     - npm install
@@ -20,4 +16,4 @@ test:
   override:
     - npm run lint
     - cd android
-    - ./gradlew install release
+    - radlew install release
