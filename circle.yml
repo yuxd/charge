@@ -14,4 +14,4 @@ dependencies:
 
 test:
   override:
-    - npm run android
+    - node node_modules/react-native/local-cli/cli.js run-android
