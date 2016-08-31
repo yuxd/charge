@@ -13,5 +13,10 @@ dependencies:
     - "/usr/local/android-sdk-linux"
 
 test:
+  pre:
+    - emulator -avd circleci-android22 -no-audio -no-window:
+        background: true
+        parallel: true
+    - circle-android wait-for-boot
   override:
     - node node_modules/react-native/local-cli/cli.js run-android
