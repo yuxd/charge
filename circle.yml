@@ -16,4 +16,4 @@ test:
   override:
     - npm run lint
     - cd android
-    - radlew install release
+    - gradlew install release
