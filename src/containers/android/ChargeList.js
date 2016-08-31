@@ -25,7 +25,7 @@ import { Actions } from 'react-native-router-flux';
 import store from 'react-native-simple-store';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
-import chargeListActions from '../../actions/chargeListActions'
+import chargeListActions from '../../actions/chargeListActions';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,17 +41,31 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
 
-  textinput: {
+  textInputView: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    color: '#e5e5e5',
+    borderRadius: 5,
+
+  },
+  textInput: {
     fontSize: 16,
+    marginTop: -10,
+    color: '#e5e5e5',
   },
 
   logintext: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   row: {
     borderBottomColor: '#E0E0E0',
@@ -146,7 +160,6 @@ class listView extends Component {
     this.getAllList = this.getAllList.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.toDetailContainer = this.toDetailContainer.bind(this);
-
   }
 
   componentWillMount() {
@@ -160,6 +173,25 @@ class listView extends Component {
     this.setState({
       isOpen: !this.state.isOpen,
     });
+  }
+
+  getAllList() {
+    console.log(1111);
+    // const pageNum = this.state.pageNum;
+    //
+    // const pageTotal = Math.ceil(this.props.state.totalNum / 10);
+    // if (pageNum < pageTotal) {
+    //  this.state.pageNum = pageNum + 1;
+    //  this.setState({ pageNum: this.state.pageNum });
+    //  this.props.getListRequest(pageNum + 1);
+    // }
+  }
+
+  toDetailContainer(pid) {
+    this.props.getChargeDesc({
+      pid,
+    });
+    Actions.detailInfo();
   }
 
   openMapUrl(index) {
@@ -180,88 +212,9 @@ class listView extends Component {
       });
     }
   }
-  toDetailContainer(pid) {
-    this.props.getChargeDesc({
-      pid,
-    });
-    Actions.detailInfo();
-  }
-  getAllList() {
-    console.log(1111);
-    //const pageNum = this.state.pageNum;
-    //
-    //const pageTotal = Math.ceil(this.props.state.totalNum / 10);
-    //if (pageNum < pageTotal) {
-    //  this.state.pageNum = pageNum + 1;
-    //  this.setState({ pageNum: this.state.pageNum });
-    //  this.props.getListRequest(pageNum + 1);
-    //}
-  }
 
   back() {
     Actions.pop();
-  }
-
-  render() {
-    const data = this.props.state.mapListData;
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    let dataSource = ds.cloneWithRows(data);
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Button style={styles.logintext} onPress={this.back}>返回</Button>
-          <TextInput
-            placeholderTextColor="#E0E0E0"
-            style={styles.textinput}
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-          />
-          <Button style={styles.search} onPress={this.back}>地图</Button>
-        </View>
-        <ListView
-          enableEmptySections
-          onEndReached={this.getAllList}
-          onEndReachedThreshold={20}
-          dataSource={dataSource}
-          renderRow={(rowData) =>
-          <View style={styles.row}>
-           {this.renderList(rowData)}
-          </View>
-            }
-        />
-        <Modal
-          position={"bottom"}
-          isOpen={this.state.isOpen}
-          style={[styles.modalStyle, styles.modalHeight]}
-          backdrop={false}
-          swipeArea={20}
-        >
-          <View style={styles.subView}>
-            {
-              this.state.newLinkUrls.map(
-                (linkUrl, index) =>
-                  (<View key={index}>
-                    <TouchableHighlight
-                      underlayColor="transparent"
-                      key={index}
-                      onPress={() => { this.openMapUrl(index); }} style={styles.buttonStyle}
-                    >
-                      <Text key={index} style={styles.buttonText}>
-                        {linkUrl.name}
-                      </Text>
-
-                    </TouchableHighlight>
-                    {
-                      index < this.state.newLinkUrls.length - 1 ?
-                        (<View style={styles.horizontalLine}/>) : (<View />)
-                    }
-                  </View>)
-              )
-            }
-          </View>
-        </Modal>
-      </View>
-    );
   }
 
   renderList(data) {
@@ -356,6 +309,70 @@ class listView extends Component {
             </Text>
           </TouchableHighlight>
         </View>
+      </View>
+    );
+  }
+
+  render() {
+    const data = this.props.state.mapListData;
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    let dataSource = ds.cloneWithRows(data);
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Button style={styles.logintext} onPress={this.back}>返回</Button>
+          <View style={styles.textInputView}>
+            <TextInput
+              placeholderTextColor="#E0E0E0"
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              keyboardType="default"
+            />
+          </View>
+          <Button style={styles.search} onPress={this.back}>地图</Button>
+        </View>
+        <ListView
+          enableEmptySections
+          onEndReached={this.getAllList}
+          onEndReachedThreshold={20}
+          dataSource={dataSource}
+          renderRow={(rowData) =>
+            <View style={styles.row}>
+             {this.renderList(rowData)}
+            </View>
+            }
+        />
+        <Modal
+          position={"bottom"}
+          isOpen={this.state.isOpen}
+          style={[styles.modalStyle, styles.modalHeight]}
+          backdrop={false}
+          swipeArea={20}
+        >
+          <View style={styles.subView}>
+            {
+              this.state.newLinkUrls.map(
+                (linkUrl, index) =>
+                  (<View key={index}>
+                    <TouchableHighlight
+                      underlayColor="transparent"
+                      key={index}
+                      onPress={() => { this.openMapUrl(index); }} style={styles.buttonStyle}
+                    >
+                      <Text key={index} style={styles.buttonText}>
+                        {linkUrl.name}
+                      </Text>
+
+                    </TouchableHighlight>
+                    {
+                      index < this.state.newLinkUrls.length - 1 ?
+                        (<View style={styles.horizontalLine}/>) : (<View />)
+                    }
+                  </View>)
+              )
+            }
+          </View>
+        </Modal>
       </View>
     );
   }

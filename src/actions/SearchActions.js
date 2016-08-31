@@ -42,6 +42,23 @@ const searchActions = {
         delay: 0, // toast显示的延时
       });
     },
+  getKeyListOfCharge: (parameter) =>
+  dispatch => {
+    callApi(
+      api.chargeKeyMapList(parameter),
+      data => {
+        dispatch(searchActions.requestKeyChargeMapListSuccess(data));
+      },
+      err => {
+        dispatch(searchActions.requestChargeMapListFail(err));
+      }
+    );
+  },
+  requestKeyChargeMapListSuccess: (data) =>
+    dispatch => {
+      dispatch(searchActions.setChargeMapList(data));
+      dispatch(searchActions.setLocationToMap(data.location));
+    },
   getListOfCharge: (location, parameter) =>
     dispatch => {
       callApi(
