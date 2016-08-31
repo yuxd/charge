@@ -12,6 +12,7 @@ dependencies:
       - echo y | android update sdk --no-ui --all --filter "platform-tools"
       - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.0"
       - echo y | android update sdk --no-ui --all --filter "android-24"
+      - chmod +x gradlew
       - (./android/gradlew -version):
                   timeout: 360
 
