@@ -218,6 +218,21 @@ class listView extends Component {
   }
 
   renderList(data) {
+    let uri;
+    switch (data.carBrand) {
+      case '348D':
+        uri = require('../../image/tesla.png');
+        break;
+      case '400F':
+        uri = require('../../image/bmw.png');
+        break;
+      case '3701':
+        uri = require('../../image/tengshi.png');
+        break;
+      default:
+        uri = require('../../image/tengshi.png');
+        break;
+    }
     return (
       <View style={styles.subView}>
         <View style={{ flexDirection: 'row', marginTop: 5 }}>
@@ -234,17 +249,7 @@ class listView extends Component {
           </View>
           <View>
             <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={
-                     data.carBrand === '348D' ?
-                    require('../../image/tesla.png') :
-                     data.carBrand === '400F' ?
-                      require('../../image/bmw.png') :
-                      data.carBrand === '3701' ?
-                      require('../../image/tengshi.png') :
-                       require('../../image/tesla.png')
-                    }
-              />
+              <Image source={uri}/>
             </View>
           </View>
         </View>
