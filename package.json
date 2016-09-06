@@ -7,6 +7,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "preandroid": "npm run lint",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "test":"run lint",
     "lint": "eslint index.android.js index.ios.js src"
   },
   "dependencies": {
