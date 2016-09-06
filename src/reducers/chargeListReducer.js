@@ -15,7 +15,7 @@ const chargeListReducer = handleActions({
     const newState = Object.assign({}, state);
     const oriData = newState.mapListData;
     newState.mapListData = oriData.concat(action.payload.data);
-    newState.total = newState.payload.total;
+    newState.total = action.payload.total;
     return newState;
   },
 }, initialState);

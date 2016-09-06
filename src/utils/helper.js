@@ -1,6 +1,7 @@
 /**
  * Created by liwanchong on 2016/8/2.
  */
+import { Global } from '../Global';
 
 const Helper = {
   bindMethod: (obj) => {
@@ -33,6 +34,15 @@ const Helper = {
       default :
         return false;
     }
+  },
+
+  getToken: () => {
+    const user = Global.appState.user;
+    const visitor = Global.appState.visitor;
+    if (user) {
+      return user.accessToken;
+    }
+    return visitor.accessToken;
   },
 };
 

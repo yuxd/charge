@@ -17,113 +17,129 @@ import { View,
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from 'react-native-button';
+import { Actions } from 'react-native-router-flux';
 import Helper from '../../utils/helper';
 import ChooseActions from '../../actions/ChooseActions';
 import { Global } from '../../Global';
 
 const styles = StyleSheet.create({
-  thumb: {
-    padding: 10,
-    height: 60,
-    overflow: 'hidden',
-    backgroundColor: 'white',
-    width: 80,
-    marginLeft: 13,
-    marginTop: 10,
-    borderColor: '#D8D8D8',
-    borderWidth: 1,
+  textLogin: {
+    flex: 1,
+    height: 30,
+    color: '#1e90ff',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
-  thumb1: {
-    padding: 10,
-    height: 60,
-    overflow: 'hidden',
-    backgroundColor: 'white',
-    width: 80,
-    marginLeft: 13,
-    marginTop: 10,
-    borderColor: '#3366FF',
+  textLoginContainer: {
+    borderRadius: 2,
+    height: 40,
     borderWidth: 1,
+    borderColor: '#1e90ff',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  header: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'white',
+    backgroundColor: '#4CC4F6',
+  },
+  loginTextStyle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    fontWeight: '500',
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: '500',
   },
   longButton: {
-    padding: 2,
-    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 23,
     overflow: 'hidden',
     backgroundColor: 'white',
     width: 111,
-    marginLeft: 13,
-    marginTop: 10,
     borderColor: '#D8D8D8',
     borderWidth: 1,
   },
   longButton1: {
-    padding: 2,
-    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 23,
     overflow: 'hidden',
     backgroundColor: 'white',
     width: 111,
-    marginLeft: 13,
-    marginTop: 10,
     borderColor: '#3366FF',
     borderWidth: 1,
   },
   image: {
-    width: 20,
-    height: 20,
-    alignSelf: 'center',
-  },
-  text: {
-    alignSelf: 'center',
-    marginTop: 5,
-    fontSize: 10,
-    color: '#282828',
-  },
-  text1: {
-    alignSelf: 'center',
-    marginTop: 5,
-    fontSize: 10,
-    color: '#3366FF',
+    width: 83.3,
+    height: 56,
   },
   flexContainer: {
     flexDirection: 'row',
+    paddingBottom: 10,
+    justifyContent: 'space-between',
+    flex: 1,
   },
   brand: {
-    marginLeft: 13,
-    marginTop: 10,
+    paddingBottom: 10,
   },
   container: {
-    height: 250,
     borderBottomWidth: 1,
     borderBottomColor: '#D8D8D8',
-    marginTop: 45,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   chargeContainer: {
-    height: 70,
     borderBottomWidth: 1,
     borderBottomColor: '#D8D8D8',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   payContainer: {
-    height: 310,
     borderBottomWidth: 1,
     borderBottomColor: '#D8D8D8',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   chargeText: {
-    alignSelf: 'center',
+    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontSize: 10,
     color: '#282828',
   },
   chargeText1: {
-    alignSelf: 'center',
+    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontSize: 10,
     color: '#3366FF',
   },
-  testObj: {
-    position: 'absolute',
-    left: 100,
-    top: 100,
-  },
   toolbar: {
     backgroundColor: '#e9eaed',
-    height: 56,
+    height: 40,
   },
 });
 
@@ -493,43 +509,57 @@ class Choose extends Component {
   }
 
   renderTask(brand, index) {
-    const randomImages = [
-      require('../../image/logo.png'),
-      require('../../image/login.png'),
+    const imagesUrl = [
+      require('../../image/custom/CarBrand_no.png'),
+      require('../../image/custom/tesla_no.png'),
+      require('../../image/custom/tengshi_no.png'),
+      require('../../image/custom/baoma_no.png'),
+      require('../../image/custom/byd_no.png'),
+      require('../../image/custom/rongwei_no.png'),
+      require('../../image/custom/beiqi_no.png'),
+      require('../../image/custom/zhongtai_no.png'),
+      require('../../image/custom/byd_special_no.png'),
+      require('../../image/custom/jiangling_no.png'),
+      require('../../image/custom/jianghuai_no.png'),
+      require('../../image/custom/other_no.png'),
+    ];
+    const imageSelectUrl = [
+      require('../../image/custom/CarBrand_yes.png'),
+      require('../../image/custom/tesla_yes.png'),
+      require('../../image/custom/tengshi_yes.png'),
+      require('../../image/custom/baoma_yes.png'),
+      require('../../image/custom/byd_yes.png'),
+      require('../../image/custom/rongwei_yes.png'),
+      require('../../image/custom/beiqi_yes.png'),
+      require('../../image/custom/zhongtai_yes.png'),
+      require('../../image/custom/byd_special_yes.png'),
+      require('../../image/custom/jiangling_yes.png'),
+      require('../../image/custom/jianghuai_yes.png'),
+      require('../../image/custom/other_yes.png'),
     ];
 
     if (brand.select) {
       return (
-        <Button
-          containerStyle={styles.thumb1}
-          key={index}
-          activeOpacity={1}
-        >
-          <View>
-            <Image
-              style={styles.image}
-              source={randomImages[Math.floor(Math.random() * randomImages.length)]}
-            />
-            <Text style={styles.text1}>{brand.name}</Text>
-          </View>
-        </Button>
+        <View key={index}>
+          <Image
+            style={styles.image}
+            source={imageSelectUrl[brand.id]}
+          />
+        </View>
       );
     }
     return (
-      <Button
-        containerStyle={styles.thumb}
-        key={index}
-        onPress={() => { this.handlePress(brand.name); }}
-        activeOpacity={1}
-      >
-        <View>
+      <View key={index}>
+        <TouchableHighlight
+          onPress={() => { this.handlePress(brand.name); }}
+          activeOpacity={0}
+        >
           <Image
             style={styles.image}
-            source={randomImages[Math.floor(Math.random() * randomImages.length)]}
+            source={imagesUrl[brand.id]}
           />
-          <Text style={styles.text}>{brand.name}</Text>
-        </View>
-      </Button>
+        </TouchableHighlight>
+      </View>
     );
   }
 
@@ -566,6 +596,18 @@ class Choose extends Component {
     if (this.state.brands.length > 0) {
       return (
         <View style={{ flex: 1 }}>
+          <View style={styles.header}>
+            <Text
+              style={[styles.search, { marginLeft: 10 }]}
+              onPress={() => { Actions.pop(); }}
+            >
+              返回
+            </Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.loginTextStyle}>个人定制</Text>
+            </View>
+            <Text style={styles.search} onPress={() => { Actions.regist(); }}>重置</Text>
+          </View>
           <ScrollView >
             <View>
               <View style={styles.container}>
@@ -608,17 +650,16 @@ class Choose extends Component {
               </View>
             </View>
           </ScrollView>
-          <ToolbarAndroid
-            style={styles.toolbar}
-          >
-            <View style={{ height: 56, flexDirection: 'row', alignItems: 'center' }}>
-              <Button
+          <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+            <View style={[styles.rowContainer, styles.textLoginContainer]}>
+              <Text
+                style={styles.textLogin}
                 onPress={this.saveCustom}
-                style={{ marginLeft: 160, marginTop: 10 }}
-              >保 存
-              </Button>
+              >
+                保存
+              </Text>
             </View>
-          </ToolbarAndroid>
+          </View>
         </View>
       );
     }

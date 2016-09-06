@@ -145,17 +145,7 @@ class listView extends Component {
     this.state = {
       pageNum: 1,
       isOpen: false,
-      newLinkUrls: [
-        {
-          url: 'baidumap://map/direction?destination=39.6,116.5',
-          name: '百度',
-        }, {
-          url: 'androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=36.2&lon=116.1&dev=0',
-          name: '高德',
-        }, {
-          url: '',
-          name: '取消',
-        }],
+      newLinkUrls: [],
     };
     this.getAllList = this.getAllList.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
@@ -169,8 +159,20 @@ class listView extends Component {
     this.setState({});
   }
 
-  setModalVisible() {
+  setModalVisible(data) {
+    const newLinkUrls = [
+      {
+        url: `baidumap://map/direction?destination=${data.location.latitude},${data.location.longitude}`,
+        name: '百度',
+      }, {
+        url: `androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=${data.location.latitude}&lon=${data.location.longitude}&dev=0`,
+        name: '高德',
+      }, {
+        url: '',
+        name: '取消',
+      }];
     this.setState({
+      newLinkUrls,
       isOpen: !this.state.isOpen,
     });
   }
@@ -188,7 +190,10 @@ class listView extends Component {
 
   toDetailContainer(pid) {
     this.props.getChargeDesc({
-      pid,
+      access_token: Helper.getToken(),
+      parameter: {
+        pid,
+      },
     });
     Actions.detailInfo();
   }
@@ -296,7 +301,7 @@ class listView extends Component {
           <TouchableHighlight
             underlayColor="transparent"
             style={styles.buttonStyle}
-            onPress={this.setModalVisible}
+            onPress={() => this.setModalVisible(data)}
           >
             <Text style={styles.buttonText}>
               引导
