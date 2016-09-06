@@ -120,10 +120,10 @@ class Detail extends React.Component {
       thridPlug: false,
       newLinkUrls: [
         {
-          url: 'baidumap://map/direction?destination=39.6,116.5',
+          url: `baidumap://map/direction?destination=${this.props.singeData.location.latitude},${this.props.singeData.location.longitude}`,
           name: '百度',
         }, {
-          url: 'androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=36.2&lon=116.1&dev=0',
+          url: `androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=${this.props.singeData.location.latitude}&lon=${this.props.singeData.location.longitude}&dev=0`,
           name: '高德',
         }, {
           url: '',
@@ -132,7 +132,6 @@ class Detail extends React.Component {
     };
     Helper.bindMethod(this);
   }
-
   componentWillReceiveProps(nextProps) {
     this.setState({
       singeData: nextProps.singeData,
@@ -540,7 +539,7 @@ class Detail extends React.Component {
           </View>
         </ScrollableTabView>
         <Modal
-          position={'center'}
+          position={'bottom'}
           isOpen={this.state.thridPlug}
           style={[styles.modalStyle, styles.modalHeight]}
           backdrop={false}

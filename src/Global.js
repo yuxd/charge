@@ -12,6 +12,7 @@ const Global = {
 const appStateDefault = {
   user: null,
   boolFirstLaunch: true,
+  visitor: null,
 };
 
 export {

@@ -21,9 +21,33 @@ import { Actions } from 'react-native-router-flux';
 import Helper from '../../utils/helper';
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'white',
+    backgroundColor: '#4CC4F6',
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: '500',
+  },
+  loginTextStyle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    fontWeight: '500',
+    marginRight: 50,
+  },
   container: {
     flex: 1,
-    backgroundColor: 'red',
   },
   bgcontainer: {
     flex: 1,
@@ -36,12 +60,9 @@ const styles = StyleSheet.create({
   },
   content: {},
   bg: {
-    flex: 2.17,
-    alignItems: 'center',
-    justifyContent: 'center',
-    resizeMode: Image.resizeMode.contain,
     width: undefined,
-    height: undefined,
+    height: 200,
+    resizeMode: 'stretch',
   },
   menuitem: {
     height: 50,
@@ -167,20 +188,24 @@ class About extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Text
+            style={[styles.search, { marginLeft: 10 }]}
+            onPress={() => { Actions.pop(); }}
+          >
+            返回
+          </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.loginTextStyle}>关于桩家</Text>
+          </View>
+        </View>
         <View style={styles.bgcontainer}>
           <Image
             style={styles.bg}
             source={require('../../image/bg_about.png')}
-          >
-            <View style={{ height: 80, alignItems: 'center', justifyContent: 'flex-end' }}>
-              <View>
-                <Text style={{ color: 'red', textAlign: 'center', flex: 4 }}>1.0.21</Text>
-              </View>
-            </View>
-          </Image>
-
-          <View style={{ flex: 2 }}>
-            <View style={{ flex: 5, backgroundColor: '#FFFFFF' }}>
+          />
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
               <ListView
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow}
@@ -196,7 +221,7 @@ class About extends Component {
               }}
             >
               <View>
-                <Text style={{ color: 'red', textAlign: 'center', flex: 4 }}>
+                <Text style={{ color: 'red', textAlign: 'center', flex: 1 }}>
                   Copyright 2016 evzhuangjia.com |版权所有
                 </Text>
               </View>

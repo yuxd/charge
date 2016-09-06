@@ -13,54 +13,66 @@ const initialState = {
       {
         name: '全部',
         value: '',
+        id: 0,
       },
       {
         name: '特斯拉',
         value: '348D',
+        id: 1,
       },
       {
         name: '腾势',
         value: '3701',
+        id: 2,
       },
       {
         name: '宝马',
         value: '400F',
+        id: 3,
       },
     ],
     [
       {
         name: '比亚迪(电动)',
         value: '4041_2',
+        id: 4,
       },
       {
         name: '荣威',
         value: '4093',
+        id: 5,
       },
       {
         name: '北汽',
         value: '415D',
+        id: 6,
       },
       {
         name: '众泰',
         value: '4149',
+        id: 7,
       },
     ],
     [
       {
         name: '比亚迪(混动)',
         value: '4041_1',
+        id: 8,
       },
       {
         name: '江铃',
         value: '4049',
+        id: 9,
       },
       {
         name: '江淮',
         value: '900D',
+        id: 10,
       },
       {
         name: '其他',
         value: 'FFFF',
+        id: 11,
       },
     ],
   ],

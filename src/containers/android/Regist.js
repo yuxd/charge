@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     backgroundColor: '#F5F5F5',
-    marginTop: 50,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   lineContainer: {
-    backgroundColor: '#C5C1AA',
+    backgroundColor: '#DCDCDC',
     height: 1,
   },
   vLine: {
@@ -45,14 +44,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 9,
-    height: 30,
+    height: 40,
     color: '#000000',
     margin: 0,
     padding: 0,
   },
   textCode: {
     flex: 6,
-    height: 30,
+    height: 40,
     color: '#000000',
     margin: 0,
     padding: 0,
@@ -66,9 +65,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 2,
+    marginTop: 10,
   },
   textRegist: {
-    height: 30,
+    height: 40,
     color: '#FFFFFF',
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -93,6 +93,31 @@ const styles = StyleSheet.create({
     color: '#1e90ff',
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  loginTextStyle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    fontWeight: '500',
+    marginLeft: -40,
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: '500',
+  },
+  header: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'white',
+    backgroundColor: '#4CC4F6',
   },
 });
 
@@ -175,7 +200,18 @@ class Regist extends Component {
   render() {
     return (
       <View style={styles.rootContainer}>
-        <View style={[styles.rowContainer, styles.rowBG]}>
+        <View style={styles.header}>
+          <Text
+            style={[styles.search, { marginLeft: 10 }]}
+            onPress={() => { Actions.pop(); }}
+          >
+            返回
+          </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.loginTextStyle}>注册</Text>
+          </View>
+        </View>
+        <View style={[styles.rowContainer, styles.rowBG, { marginTop: 20 }]}>
           <View style={styles.smallImageContainer}>
             <Image
               source={require('../../image/login_icon_phonenumber.png')}
@@ -184,7 +220,7 @@ class Regist extends Component {
           </View>
           <TextInput
             placeholder="请输入手机号"
-            placeholderTextColor="#808080"
+            placeholderTextColor="#DCDCDC"
             style={styles.textInput}
             underlineColorAndroid="transparent"
             keyboardType="default"
@@ -205,7 +241,7 @@ class Regist extends Component {
           <TextInput
             ref={c => { this.passwordInput = c; }}
             placeholder="请输入密码"
-            placeholderTextColor="#808080"
+            placeholderTextColor="#DCDCDC"
             style={styles.textInput}
             secureTextEntry
             underlineColorAndroid="transparent"
@@ -227,7 +263,7 @@ class Regist extends Component {
           <TextInput
             ref={c => { this.passwordInput = c; }}
             placeholder="请输入短信验证码"
-            placeholderTextColor="#808080"
+            placeholderTextColor="#DCDCDC"
             style={styles.textCode}
             secureTextEntry
             underlineColorAndroid="transparent"

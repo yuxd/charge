@@ -30,28 +30,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E0E0E0',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    padding: 5,
   },
   thumb: {
     width: 26,
     height: 26,
-    marginTop: 10,
   },
   title: {
-    marginTop: 5,
-    marginLeft: 3,
-    width: 300,
     color: 'black',
     flex: 1,
-  },
-  num: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginLeft: 5,
-  },
-  desc: {
-    marginTop: 8,
-    marginLeft: 3,
   },
   container1: {
     height: 50,
@@ -128,7 +114,7 @@ class SearchList extends Component {
 
   changeState(key, value) {
     this.props.getChargeList({
-      access_token: Global.appState.user.accessToken,
+      access_token: Helper.getToken(),
       parameter: {
         radius: 5000,
         name: value,
@@ -148,7 +134,7 @@ class SearchList extends Component {
     }
     this.setState({ history: Global.appState.searchHistory });
     this.props.getKeyListOfCharge({
-      access_token: Global.appState.user.accessToken,
+      access_token: Helper.getToken(),
       parameter: {
         radius: 5000,
         name: this.state.searchText,
@@ -163,7 +149,7 @@ class SearchList extends Component {
   pressData(data) {
     Actions.pop();
     this.props.getListOfCharge(data.location, {
-      access_token: Global.appState.user.accessToken,
+      access_token: Helper.getToken(),
       parameter: {
         radius: 5000,
         name: data.name,
@@ -180,23 +166,23 @@ class SearchList extends Component {
     return (
       <TouchableHighlight onPress={() => this.pressData(data)} key={index}>
         <View style={styles.row}>
-          <View>
-            <Image style={styles.thumb} source={require('../../image/logo.png')}/>
+          <View style={{ justifyContent: 'center' }}>
+            <Image style={styles.thumb} source={require('../../image/position.png')}/>
           </View>
-          <View style={{ width: 250 }}>
-            <View>
+          <View style={{ flex: 1 }}>
+            <View style={{ paddingLeft: 10, paddingTop: 5 }}>
               <Text style={styles.title} numberOfLines={1}>
                 {data.name}
               </Text>
             </View>
-            <View>
-              <Text style={styles.desc}>
+            <View style={{ paddingLeft: 10, paddingTop: 5, paddingBottom: 3 }}>
+              <Text>
                 {data.address}
               </Text>
             </View>
           </View>
-          <View>
-            <Text style={styles.num}>
+          <View style={{ justifyContent: 'center', paddingRight: 10, paddingLeft: 10 }}>
+            <Text>
               {data.num}个结果
             </Text>
           </View>
@@ -228,7 +214,7 @@ class SearchList extends Component {
           <Button style={styles.search} onPress={this.back}>取消</Button>
         </View>
         <ScrollView>
-          <View>
+          <View style={{ paddingLeft: 10 }}>
             {this.state.searchListData.map(this.list)}
           </View>
         </ScrollView>

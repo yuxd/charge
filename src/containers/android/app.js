@@ -68,8 +68,8 @@ class App extends React.Component {
           <Scene key="modal" component={Modal}>
             <Scene key="root">
               <Scene key="start" component={Start} title="Start" hideNavBar hideTabBar initial/>
-              <Scene key="login" component={Login} title="登陆" hideNavBar={false}/>
-              <Scene key="regist" component={Regist} title="注册" hideNavBar={false}/>
+              <Scene key="login" component={Login} hideNavBar/>
+              <Scene key="regist" component={Regist} hideNavBar/>
               <Scene key="userAgreement" component={UserAgreement} title="用户协议" hideNavBar={false}/>
               <Scene key="findPassword" component={FindPassword} title="手机找回密码" hideNavBar={false}/>
               <Scene key="introduction" component={Introduction} title="Introduction" hideNavBar/>
@@ -97,10 +97,7 @@ class App extends React.Component {
               <Scene
                 key="choose"
                 component={Choose}
-                title="个人定制"
-                rightTitle="重置"
-                onRight={this.test1}
-                hideNavBar={false}
+                hideNavBar
               />
               <Scene
                 key="searchList"
@@ -108,9 +105,9 @@ class App extends React.Component {
                 hideNavBar
               />
               <Scene
-                key="about" component={About}
-                title="关于"
-                hideNavBar={false}
+                key="about"
+                component={About}
+                hideNavBar
               />
               <Scene
                 key="helpView"
@@ -121,8 +118,7 @@ class App extends React.Component {
               <Scene
                 key="chargeView"
                 component={ChargeView}
-                title="桩家视界"
-                hideNavBar={false}
+                hideNavBar
               />
               <Scene
                 key="chargeList"

@@ -17,11 +17,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from 'react-native-button';
 import { Actions } from 'react-native-router-flux';
+import Toast from 'react-native-root-toast';
+import DeviceInfo from 'react-native-device-info';
 import Map from './MapContainer';
 import LeftMenu from './LeftMenu';
 import ShellsDetail from './ShellsDetail';
 import ChooseActions from '../../actions/ChooseActions';
 import { Global } from '../../Global';
+import Helper from '../../utils/helper';
 
 const styles = StyleSheet.create({
   container: {
@@ -81,9 +84,12 @@ class Main extends Component {
       modalVisible: false,
       transparent: false,
       listMapFlag: false,
+      initialPosition: 'unknown',
+      lastPosition: 'unknown',
     };
 
     this.openDrawer = this.openDrawer.bind(this);
+    this.search = this.search.bind(this);
     this.imagePress = this.imagePress.bind(this);
   }
 
@@ -102,9 +108,20 @@ class Main extends Component {
   }
 
   imagePress() {
-    this.props.actions.getCustomOwnData({
-      access_token: Global.appState.user.accessToken,
-    });
+    if (Global.appState.user) {
+      this.props.actions.getCustomOwnData({
+        access_token: Helper.getToken(),
+      });
+    } else {
+      Toast.show('请先登录！', {
+        duration: Toast.durations.LONG, // toast显示时长
+        position: Toast.positions.CENTER, // toast位置
+        shadow: true, // toast是否出现阴影
+        animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+        hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+        delay: 0, // toast显示的延时
+      });
+    }
   }
 
   mapToList() {
