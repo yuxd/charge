@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import store from 'react-native-simple-store';
+import Toast from 'react-native-root-toast';
 import searchActions from '../../actions/SearchActions';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
@@ -94,10 +95,34 @@ class SearchList extends Component {
       searchText: '',
       history: Global.appState.searchHistory || { list: [] },
       searchListData: [],
+      userLat: 0.0,
+      userLng: 0.0,
     };
     Helper.bindMethod(this);
   }
-
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          userLat: lat,
+          userLng: lng,
+        });
+      },
+      error => {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
+          duration: Toast.durations.LONG, // toast显示时长
+          position: Toast.positions.CENTER, // toast位置
+          shadow: true, // toast是否出现阴影
+          animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+          hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+          delay: 0, // toast显示的延时
+        });
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    );
+  }
   componentDidMount() {
     if (!Global.appState.searchHistory) {
       Global.appState.searchHistory = {
@@ -118,7 +143,8 @@ class SearchList extends Component {
       parameter: {
         radius: 5000,
         name: value,
-        region: '北京',
+        longitude: this.state.userLng,
+        latitude: this.state.userLat,
       },
     });
     this.setState({ [key]: value });
@@ -138,9 +164,8 @@ class SearchList extends Component {
       parameter: {
         radius: 5000,
         name: this.state.searchText,
-        region: '北京',
-        latitude: 40.008456800067,
-        longitude: 116.47474416608,
+        latitude: this.state.userLat,
+        longitude: this.state.userLng,
       },
     });
     Actions.pop();
@@ -153,11 +178,10 @@ class SearchList extends Component {
       parameter: {
         radius: 5000,
         name: data.name,
-        region: '北京',
         latitude: data.location.lat,
         longitude: data.location.lng,
-        originLat: 40.008456800067,
-        originLng: 116.47474416608,
+        originLat: this.state.userLat,
+        originLng: this.state.userLng,
       },
     });
   }

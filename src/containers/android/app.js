@@ -28,6 +28,7 @@ import Main from './../../containers/android/Main';
 import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 import ChargeList from '../../containers/android/ChargeList';
+import WeChat from '../../containers/android/WeChat';
 import { Global } from '../../Global';
 import imageViewPage from '../../containers/android/imageViewPager';
 import Regist from './Regist';
@@ -114,6 +115,11 @@ class App extends React.Component {
                 component={HelpView}
                 title="帮助"
                 hideNavBar={false}
+              />
+              <Scene
+                key="weChat"
+                component={WeChat}
+                hideNavBar
               />
               <Scene
                 key="chargeView"

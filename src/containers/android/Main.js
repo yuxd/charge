@@ -84,13 +84,42 @@ class Main extends Component {
       modalVisible: false,
       transparent: false,
       listMapFlag: false,
-      initialPosition: 'unknown',
-      lastPosition: 'unknown',
+      lat: 0.0,
+      lng: 0.0,
     };
 
     this.openDrawer = this.openDrawer.bind(this);
     this.search = this.search.bind(this);
     this.imagePress = this.imagePress.bind(this);
+    this.myLocation = this.myLocation.bind(this);
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          lat,
+          lng,
+        });
+        this.props.actions.setOwnLocation({
+          lat,
+          lng,
+        });
+      },
+      error => {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
+          duration: Toast.durations.LONG, // toast显示时长
+          position: Toast.positions.CENTER, // toast位置
+          shadow: true, // toast是否出现阴影
+          animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+          hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+          delay: 0, // toast显示的延时
+        });
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -105,6 +134,13 @@ class Main extends Component {
 
   search() {
     Actions.searchList();
+  }
+
+  myLocation() {
+    this.props.actions.setOwnLocation({
+      lat: this.state.lat,
+      lng: this.state.lng,
+    });
   }
 
   imagePress() {
@@ -176,6 +212,16 @@ class Main extends Component {
               >
                 <Image
                   source={require('../../image/funnel.png')}
+                />
+              </TouchableHighlight>
+            </View>
+            <View style={{ flex: 1, bottom: 60, position: 'absolute', left: 10 }}>
+              <TouchableHighlight
+                style={{ width: 24, height: 24, justifyContent: 'center', alignItems: 'center' }}
+                onPress={this.myLocation}
+              >
+                <Image
+                  source={require('../../image/icon-myLocation.png')}
                 />
               </TouchableHighlight>
             </View>

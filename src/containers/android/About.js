@@ -108,6 +108,9 @@ class About extends Component {
       case '0':
         Actions.helpView();
         break;
+      case '2':
+        Actions.weChat();
+        break;
       case '3':
         {
           const url = `mailto:${data.content}`;
@@ -214,10 +217,10 @@ class About extends Component {
             </View>
             <View
               style={{
-                flex: 1,
                 backgroundColor: '#e9eaed',
                 alignItems: 'center',
                 justifyContent: 'center',
+                height: 50,
               }}
             >
               <View>

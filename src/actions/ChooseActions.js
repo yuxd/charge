@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import Toast from 'react-native-root-toast';
 import { api, callApi } from '../apis/api';
 import actionEnum from '../constants/actionEnum';
+import SearchActions from '../actions/SearchActions';
 
 const chooseActions = {
   setCustomOwnData: createAction(actionEnum.SET_CUSTOM_OWN_DATA),
@@ -65,7 +66,10 @@ const chooseActions = {
         delay: 0, // toast显示的延时
       });
     },
-
+  setOwnLocation: (parameter) =>
+    dispatch => {
+      dispatch(SearchActions.setLocationToMap(parameter));
+    },
 };
 
 export default chooseActions;
