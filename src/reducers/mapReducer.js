@@ -15,6 +15,7 @@ const initialState = {
   },
   mapListData: {},
   listMapFlag: false,
+  locationFlag: false,
 };
 const mapReducer = handleActions({
   [mapAction.getVisitorData]: (state, action) => {
@@ -148,12 +149,18 @@ const mapReducer = handleActions({
       latitude: action.payload.lat,
       longitude: action.payload.lng,
     };
+    newState.locationFlag = true;
     return newState;
   },
   [SearchActions.setChargeMapList]: (state, action) => {
     const newState = Object.assign({}, state);
     newState.mapListData = action.payload;
     newState.listMapFlag = true;
+    return newState;
+  },
+  [mapAction.locationFlagBack]: (state, action) => {
+    const newState = Object.assign({}, state);
+    newState.locationFlag = false;
     return newState;
   },
 }, initialState);

@@ -9,6 +9,7 @@ import { View,
   Image,
   ListView,
   TouchableHighlight,
+  TouchableOpacity,
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
@@ -550,15 +551,15 @@ class Choose extends Component {
     }
     return (
       <View key={index}>
-        <TouchableHighlight
+        <TouchableOpacity
           onPress={() => { this.handlePress(brand.name); }}
-          activeOpacity={0}
+          activeOpacity={1}
         >
           <Image
             style={styles.image}
             source={imagesUrl[brand.id]}
           />
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     );
   }

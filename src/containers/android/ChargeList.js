@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import store from 'react-native-simple-store';
+import Toast from 'react-native-root-toast';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
 import chargeListActions from '../../actions/chargeListActions';
@@ -146,6 +147,8 @@ class listView extends Component {
       pageNum: 1,
       isOpen: false,
       newLinkUrls: [],
+      userLat: 0.0,
+      userLng: 0.0,
     };
     this.getAllList = this.getAllList.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
@@ -153,6 +156,27 @@ class listView extends Component {
   }
 
   componentWillMount() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          userLat: lat,
+          userLng: lng,
+        });
+      },
+      error => {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
+          duration: Toast.durations.LONG, // toast显示时长
+          position: Toast.positions.CENTER, // toast位置
+          shadow: true, // toast是否出现阴影
+          animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+          hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+          delay: 0, // toast显示的延时
+        });
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -193,6 +217,8 @@ class listView extends Component {
       access_token: Helper.getToken(),
       parameter: {
         pid,
+        originLat: this.state.userLat,
+        originLng: this.state.userLng,
       },
     });
     Actions.detailInfo();

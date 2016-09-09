@@ -12,21 +12,19 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch',
-    backgroundColor: '#87CEFA',
+    backgroundColor: '#4CC4F6',
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'stretch',
-    marginTop: 3,
-    marginBottom: 3,
+    paddingBottom: 10,
   },
   logoImage: {
     width: 80,
     height: 80,
   },
   textRole: {
-    height: 30,
     color: '#ffffff',
     textAlignVertical: 'center',
   },
@@ -52,14 +50,13 @@ class UserInfo extends Component {
       userName: '',
       password: '',
     };
-
     Helper.bindMethod(this);
   }
 
   renderNoLogin() {
     return (
       <View style={styles.rootContainer}>
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, { paddingTop: 10 }]}>
           <Image
             source={require('../../image/header.png')}
             style={styles.logoImage}
@@ -76,7 +73,7 @@ class UserInfo extends Component {
               style={styles.textLogin}
               onPress={() => { Actions.login(); }}
             >
-              登陆
+              登录
             </Text>
           </View>
         </View>

@@ -41,8 +41,6 @@ class Map extends Component {
     super(props);
     // 初始状态
     this.state = {
-      initialPosition: 'unknown',
-      lastPosition: 'unknown',
       center: {
         latitude: 40.008456800067,
         longitude: 116.47474416608,
@@ -50,28 +48,28 @@ class Map extends Component {
       zoom: 11,
       userTrackingMode: Mapbox.userTrackingMode.none,
       annotations: [],
-      userLocation: { lng: 0.0, lat: 0.0 },
-      watchID: null,
+      userLat: 0.0,
+      userLng: 0.0,
     };
     Helper.bindMethod(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        const initialPosition = JSON.stringify(position);
-       // this.setState({ initialPosition });
-        Toast.show(`成功:${initialPosition}`, {
-          duration: Toast.durations.LONG, // toast显示时长
-          position: Toast.positions.CENTER, // toast位置
-          shadow: true, // toast是否出现阴影
-          animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
-          hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
-          delay: 0, // toast显示的延时
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          userLat: lat,
+          userLng: lng,
+        });
+        this.props.setMyLocation({
+          lat,
+          lng,
         });
       },
       error => {
-        Toast.show(`错误:${error}`, {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
           duration: Toast.durations.LONG, // toast显示时长
           position: Toast.positions.CENTER, // toast位置
           shadow: true, // toast是否出现阴影
@@ -119,14 +117,10 @@ class Map extends Component {
     this.setState({
       annotations: [...this.state.annotations, ...showMarkerArr],
     });
-    if (this.props.location.latitude !== nextProps.location.latitude &&
-      this.props.location.longitude !== nextProps.location.longitude) {
+    if (nextProps.locationFlag) {
       this.map.setCenterCoordinate(nextProps.location.latitude, nextProps.location.longitude);
+      this.props.locationFlagBack();
     }
-  }
-
-  componentWillUnmount() {
-    // navigator.geolocation.clearWatch(this.state.watchID);
   }
 
   onRegionDidChange(location) {
@@ -148,6 +142,8 @@ class Map extends Component {
       access_token: Helper.getToken(),
       parameter: {
         pid: annotation.id,
+        originLng: this.state.userLng,
+        originLat: this.state.userLat,
       },
     });
   }

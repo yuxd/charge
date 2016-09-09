@@ -5,8 +5,10 @@ import { createAction } from 'redux-actions';
 import Toast from 'react-native-root-toast';
 import actionEnum from '../constants/actionEnum';
 import { api, callApi } from '../apis/api';
+import SearchActions from '../actions/SearchActions';
 
 const mapActions = {
+  locationFlagBack: createAction(actionEnum.LOCATION_FLAG_BACK),
   setVisitorData: (parameter) =>
     dispatch => {
       callApi(
@@ -47,6 +49,10 @@ const mapActions = {
       );
     },
   getSingleData: createAction(actionEnum.GET_SINGLE_DATA),
+  setMyLocation: (parameter) =>
+    dispatch => {
+      dispatch(SearchActions.setLocationToMap(parameter));
+    },
 };
 
 export default mapActions;
