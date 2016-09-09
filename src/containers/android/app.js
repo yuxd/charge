@@ -29,6 +29,7 @@ import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 import ChargeList from '../../containers/android/ChargeList';
 import WeChat from '../../containers/android/WeChat';
+import LeftMenu from '../../containers/android/LeftMenu';
 import { Global } from '../../Global';
 import imageViewPage from '../../containers/android/imageViewPager';
 import Regist from './Regist';
@@ -108,6 +109,11 @@ class App extends React.Component {
               <Scene
                 key="about"
                 component={About}
+                hideNavBar
+              />
+              <Scene
+                key="leftMenu"
+                component={LeftMenu}
                 hideNavBar
               />
               <Scene
