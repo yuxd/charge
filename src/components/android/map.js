@@ -153,7 +153,7 @@ class Map extends Component {
   }
 
   goZoom(level) {
-    this.map.setZoomLevel(this.state.zoom + level);
+       this.map.setZoomLevel(this.state.zoom + level);
     this.setState({ zoom: this.state.zoom + level });
   }
 
