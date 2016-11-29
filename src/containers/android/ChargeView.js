@@ -21,11 +21,34 @@ import { bindActionCreators } from 'redux';
 import Button from 'react-native-button';
 import Swiper from 'react-native-swiper';
 import Toast from 'react-native-root-toast';
+import { Actions } from 'react-native-router-flux';
 import Helper from '../../utils/helper';
 
 const styles = StyleSheet.create({
   wrapper: {},
-
+  header: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'white',
+    backgroundColor: '#4CC4F6',
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: '500',
+  },
+  loginTextStyle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    fontWeight: '500',
+    marginRight: 50,
+  },
   slide: {
     flex: 1,
     justifyContent: 'center',
@@ -60,15 +83,18 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    flex: 1,
+    width: undefined,
+    resizeMode: 'stretch',
   },
   image1: {
-    width: 363,
+    width: undefined,
     height: 180,
+    resizeMode: 'stretch',
   },
   image1View: {
-    marginTop: 10,
-    marginLeft: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
 
@@ -114,119 +140,85 @@ class ChargeView extends Component {
 
   render() {
     return (
-      <ScrollView>
-        <View style={{ marginTop: 40 }}>
-          <Swiper
-            style={styles.wrapper}
-            height={240}
-            paginationStyle={{ bottom: 10, right: 60 }}
-            loop
-            autoplay
+      <View style={{ flex: 1 }}>
+        <View style={styles.header}>
+          <Text
+            style={[styles.search, { marginLeft: 10 }]}
+            onPress={() => { Actions.pop(); }}
           >
-            <View style={styles.slide}>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: 'http://c.hiphotos.baidu.com/image/w%3D310/sign=0dff10a81c30e924cfa4' +
-                   '9a307c096e66/7acb0a46f21fbe096194ceb468600c338644ad43.jpg',
-                }}
-              >
-                <Text
-                  style={{ height: 240 }}
-                  onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}
-                />
-              </Image>
-            </View>
-            <View style={styles.slide}>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: 'http://a.hiphotos.baidu.com/image/w%3D310/sign=4459912736a85ed' +
-                   'ffa8cf822795509d8/bba1cd11728b4710417a05bbc1cec3fdfc032374.jpg',
-                }}
-              >
-                <Text
-                  style={{ height: 240 }}
-                  onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}
-                />
-              </Image>
-            </View>
-            <View style={styles.slide}>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=9a8b4d497ed98' +
-                   'd1076d40a30113eb807/0823dd54564e9258655f5d5b9e82d158ccbf4e18.jpg',
-                }}
-              >
-                <Text
-                  style={{ height: 240 }}
-                  onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}
-                />
-              </Image>
-
-            </View>
-            <View style={styles.slide}>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f' +
-                   '79ec54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg',
-                }}
-              >
-                <Text
-                  style={{ height: 240 }}
-                  onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}
-                />
-              </Image>
-            </View>
-          </Swiper>
-          <View style={styles.image1View}>
-            <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
-              <Image
-                style={styles.image1}
-                source={{
-                  uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79ec54e' +
-                 '741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg',
-                }}
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.image1View}>
-            <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
-              <Image
-                style={styles.image1}
-                source={{
-                  uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79' +
-                   'ec54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg',
-                }}
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.image1View}>
-            <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
-              <Image
-                style={styles.image1}
-                source={{
-                  uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79ec' +
-                   '54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg',
-                }}
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.image1View}>
-            <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
-              <Image
-                style={styles.image1}
-                source={{
-                  uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79ec' +
-                 '54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg',
-                }}
-              />
-            </TouchableHighlight>
+            返回
+          </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.loginTextStyle}>桩家视界</Text>
           </View>
         </View>
-      </ScrollView>
+        <ScrollView>
+          <View>
+            <Swiper
+              style={styles.wrapper}
+              height={230}
+              paginationStyle={{ bottom: 10, right: 60 }}
+              loop
+              autoplay
+            >
+              <View style={styles.slide}>
+                <Image
+                  style={styles.image}
+                  source={require('../../image/campaign/campaign_banner2.png')}
+                >
+                  <Text
+                    style={{ height: 240 }}
+                    onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}
+                  />
+                </Image>
+              </View>
+              <View style={styles.slide}>
+                <Image
+                  style={styles.image}
+                  source={require('../../image/campaign/campaign_banner1.png')}
+                >
+                  <Text
+                    style={{ height: 240 }}
+                    onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}
+                  />
+                </Image>
+              </View>
+            </Swiper>
+            <View style={styles.image1View}>
+              <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
+                <Image
+                  style={styles.image1}
+                  source={require('../../image/campaign/campaign1.png')}
+                />
+              </TouchableHighlight>
+            </View>
+            <View style={styles.image1View}>
+              <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
+                <Image
+                  style={styles.image1}
+                  source={require('../../image/campaign/campaign2.png')}
+                />
+              </TouchableHighlight>
+            </View>
+            <View style={styles.image1View}>
+              <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
+                <Image
+                  style={styles.image1}
+                  source={require('../../image/campaign/campaign3.png')}
+                />
+              </TouchableHighlight>
+            </View>
+            <View style={styles.image1View}>
+              <TouchableHighlight onPress={() => { this.onPressButton('http://sina.cn/?from=wap'); }}>
+                <Image
+                  style={styles.image1}
+                  source={require('../../image/campaign/campaign4.png')}
+                />
+              </TouchableHighlight>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }

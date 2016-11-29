@@ -11,38 +11,18 @@ const api = {
     FetchMethod.Get,
     parameter
   ),
-  getVisitorData: (parameter) => {
-    let token = '';
-    if (Global.appState && Global.appState.user) {
-      token = Global.appState.user.accessToken;
-    }
-    const newParameter = {
-      parameter,
-      access_token: token,
-    };
-    return createFetch(
-      `${appConfig.serviceRoot}Charge/charge/wechat/query`,
+  getVisitorData: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/query`,
       FetchMethod.Get,
-      newParameter
-    );
-  },
-  getDetailByPid: (parameter) => {
-    let token = '';
-    if (Global.appState && Global.appState.user) {
-      token = Global.appState.user.accessToken;
-    }
-    const newParameter = {
-      parameter,
-      access_token: token,
-    };
-    return createFetch(
-      `${appConfig.serviceRoot}app/listAll`,
-      FetchMethod.Get,
-      newParameter
-    );
-  },
+      parameter
+  ),
   getAuthenticationCode: (parameter) => createFetch(
     `${appConfig.serviceRoot}Charge/charge/users/getAuthenticationCode`,
+    FetchMethod.Get,
+    parameter
+  ),
+  visitorToken: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/users/visitorRegist`,
     FetchMethod.Get,
     parameter
   ),
@@ -51,8 +31,23 @@ const api = {
     FetchMethod.Get,
     parameter
   ),
+  saveCustomData: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/saveUserEXCharge`,
+    FetchMethod.Get,
+    parameter
+  ),
+  customOwnData: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/queryUserEXCharge`,
+    FetchMethod.Get,
+    parameter
+  ),
   chargeMapList: (parameter) => createFetch(
     `${appConfig.serviceRoot}Charge/charge/wechat/keyWordSearch`,
+    FetchMethod.Get,
+    parameter
+  ),
+  chargeKeyMapList: (parameter) => createFetch(
+    `${appConfig.serviceRoot}Charge/charge/wechat/directSearch`,
     FetchMethod.Get,
     parameter
   ),

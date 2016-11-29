@@ -5,6 +5,7 @@ import { createAction } from 'redux-actions';
 import { Actions } from 'react-native-router-flux';
 import deepcopy from 'deepcopy';
 import store from 'react-native-simple-store';
+import DeviceInfo from 'react-native-device-info';
 import { Global, appStateDefault } from '../Global';
 import UserManagementActions from './UserManagementActions';
 
@@ -17,8 +18,17 @@ const StartActions = {
           if (!Global.appState) {
             Global.appState = deepcopy(appStateDefault);
           }
+          if (!Global.appState.user) {
+            dispatch(UserManagementActions.getVisitorToken({
+              code: DeviceInfo.getUniqueID(),
+            }));
+          }
           dispatch(UserManagementActions.setUser(Global.appState.user));
-          Actions.mainModule();
+          if (Global.appState.boolFirstLaunch) {
+            Actions.introduction();
+          } else {
+            Actions.mainModule();
+          }
         });
     },
 };

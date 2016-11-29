@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import store from 'react-native-simple-store';
+import Toast from 'react-native-root-toast';
 import searchActions from '../../actions/SearchActions';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
@@ -30,28 +31,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E0E0E0',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    padding: 5,
   },
   thumb: {
     width: 26,
     height: 26,
-    marginTop: 10,
   },
   title: {
-    marginTop: 5,
-    marginLeft: 3,
-    width: 300,
     color: 'black',
     flex: 1,
-  },
-  num: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginLeft: 5,
-  },
-  desc: {
-    marginTop: 8,
-    marginLeft: 3,
   },
   container1: {
     height: 50,
@@ -72,22 +59,31 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
 
-  textinput: {
+  textInputView: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    color: '#e5e5e5',
+    borderRadius: 5,
+
+  },
+  textInput: {
     fontSize: 16,
+    marginTop: -10,
+    color: '#e5e5e5',
   },
 
   logintext: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   search: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
 });
 
@@ -99,10 +95,34 @@ class SearchList extends Component {
       searchText: '',
       history: Global.appState.searchHistory || { list: [] },
       searchListData: [],
+      userLat: 0.0,
+      userLng: 0.0,
     };
     Helper.bindMethod(this);
   }
-
+  componentWillMount() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          userLat: lat,
+          userLng: lng,
+        });
+      },
+      error => {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
+          duration: Toast.durations.LONG, // toast显示时长
+          position: Toast.positions.CENTER, // toast位置
+          shadow: true, // toast是否出现阴影
+          animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+          hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+          delay: 0, // toast显示的延时
+        });
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    );
+  }
   componentDidMount() {
     if (!Global.appState.searchHistory) {
       Global.appState.searchHistory = {
@@ -119,11 +139,12 @@ class SearchList extends Component {
 
   changeState(key, value) {
     this.props.getChargeList({
-      access_token: Global.appState.user.accessToken,
+      access_token: Helper.getToken(),
       parameter: {
         radius: 5000,
         name: value,
-        region: '北京',
+        longitude: this.state.userLng,
+        latitude: this.state.userLat,
       },
     });
     this.setState({ [key]: value });
@@ -138,20 +159,29 @@ class SearchList extends Component {
       Global.appState.searchHistory.list.push(this.state.searchText);
     }
     this.setState({ history: Global.appState.searchHistory });
+    this.props.getKeyListOfCharge({
+      access_token: Helper.getToken(),
+      parameter: {
+        radius: 5000,
+        name: this.state.searchText,
+        latitude: this.state.userLat,
+        longitude: this.state.userLng,
+      },
+    });
+    Actions.pop();
   }
 
   pressData(data) {
     Actions.pop();
     this.props.getListOfCharge(data.location, {
-      access_token: Global.appState.user.accessToken,
+      access_token: Helper.getToken(),
       parameter: {
         radius: 5000,
         name: data.name,
-        region: '北京',
         latitude: data.location.lat,
         longitude: data.location.lng,
-        originLat: 40.008456800067,
-        originLng: 116.47474416608,
+        originLat: this.state.userLat,
+        originLng: this.state.userLng,
       },
     });
   }
@@ -160,23 +190,23 @@ class SearchList extends Component {
     return (
       <TouchableHighlight onPress={() => this.pressData(data)} key={index}>
         <View style={styles.row}>
-          <View>
-            <Image style={styles.thumb} source={require('../../image/logo.png')}/>
+          <View style={{ justifyContent: 'center' }}>
+            <Image style={styles.thumb} source={require('../../image/position.png')}/>
           </View>
-          <View style={{ width: 250 }}>
-            <View>
+          <View style={{ flex: 1 }}>
+            <View style={{ paddingLeft: 10, paddingTop: 5 }}>
               <Text style={styles.title} numberOfLines={1}>
                 {data.name}
               </Text>
             </View>
-            <View>
-              <Text style={styles.desc}>
+            <View style={{ paddingLeft: 10, paddingTop: 5, paddingBottom: 3 }}>
+              <Text>
                 {data.address}
               </Text>
             </View>
           </View>
-          <View>
-            <Text style={styles.num}>
+          <View style={{ justifyContent: 'center', paddingRight: 10, paddingLeft: 10 }}>
+            <Text>
               {data.num}个结果
             </Text>
           </View>
@@ -190,36 +220,38 @@ class SearchList extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Button style={styles.logintext} onPress={this.back}>返回</Button>
-          <TextInput
-            value={this.state.searchText}
-            onChangeText={text => {
-              this.changeState('searchText', text);
-            }}
-            placeholder="搜索地点"
-            placeholderTextColor="#E0E0E0"
-            onSubmitEditing={this.search}
-            style={styles.textinput}
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-            autoFocus
-          />
+          <View style={styles.textInputView}>
+            <TextInput
+              value={this.state.searchText}
+              onChangeText={text => {
+                this.changeState('searchText', text);
+              }}
+              placeholder="搜索地点"
+              placeholderTextColor="#E0E0E0"
+              onSubmitEditing={this.search}
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              keyboardType="default"
+              autoFocus
+            />
+          </View>
           <Button style={styles.search} onPress={this.back}>取消</Button>
         </View>
         <ScrollView>
-          <View>
+          <View style={{ paddingLeft: 10 }}>
             {this.state.searchListData.map(this.list)}
           </View>
         </ScrollView>
         <View>
           {
             this.state.history.list.map((text, i) =>
-              (<View style={{ flexDirection: 'row' }}>
+              (<View style={{ flexDirection: 'row' }} key={i}>
                 <View style={{ flex: 1 }}>
                   <Image
                     source={require('../../image/history.png')}
                   />
                 </View>
-                <View style={{ flex: 8, underlineColorAndroid: 'gray' }}>
+                <View style={{ flex: 8 }}>
                   <Text key={text + i} style={{ color: '#000000' }}>{text}</Text>
                 </View>
                 <View style={{ flex: 1 }}>

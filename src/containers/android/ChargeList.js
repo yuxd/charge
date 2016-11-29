@@ -3,19 +3,19 @@
  */
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
-  Image,
-  Navigator,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  TouchableHighlight,
-  DrawerLayoutAndroid,
-  TouchableWithoutFeedback,
-  ListView,
-  Linking,
+    View,
+    Text,
+    Image,
+    Navigator,
+    TextInput,
+    ScrollView,
+    StyleSheet,
+    Dimensions,
+    TouchableHighlight,
+    DrawerLayoutAndroid,
+    TouchableWithoutFeedback,
+    ListView,
+    Linking,
 } from 'react-native';
 import Button from 'react-native-button';
 import Modal from 'react-native-modalbox';
@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import store from 'react-native-simple-store';
+import Toast from 'react-native-root-toast';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
 import chargeListActions from '../../actions/chargeListActions';
@@ -41,17 +42,31 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
 
-  textinput: {
+  textInputView: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    color: '#e5e5e5',
+    borderRadius: 5,
+
+  },
+  textInput: {
     fontSize: 16,
+    marginTop: -10,
+    color: '#e5e5e5',
   },
 
   logintext: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   row: {
     borderBottomColor: '#E0E0E0',
@@ -131,17 +146,9 @@ class listView extends Component {
     this.state = {
       pageNum: 1,
       isOpen: false,
-      newLinkUrls: [
-        {
-          url: 'baidumap://map/direction?destination=39.6,116.5',
-          name: '百度',
-        }, {
-          url: 'androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=36.2&lon=116.1&dev=0',
-          name: '高德',
-        }, {
-          url: '',
-          name: '取消',
-        }],
+      newLinkUrls: [],
+      userLat: 0.0,
+      userLng: 0.0,
     };
     this.getAllList = this.getAllList.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
@@ -149,20 +156,52 @@ class listView extends Component {
   }
 
   componentWillMount() {
+    navigator.geolocation.getCurrentPosition(
+        position => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          this.setState({
+            userLat: lat,
+            userLng: lng,
+          });
+        },
+        error => {
+          Toast.show(`获取当前位置失败,原因:${error}`, {
+            duration: Toast.durations.LONG, // toast显示时长
+            position: Toast.positions.CENTER, // toast位置
+            shadow: true, // toast是否出现阴影
+            animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+            hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+            delay: 0, // toast显示的延时
+          });
+        },
+        { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({});
   }
 
-  setModalVisible() {
+  setModalVisible(data) {
+    const newLinkUrls = [
+      {
+        url: `baidumap://map/direction?destination=${data.location.latitude},${data.location.longitude}`,
+        name: '百度',
+      }, {
+        url: `androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=${data.location.latitude}&lon=${data.location.longitude}&dev=0`,
+        name: '高德',
+      }, {
+        url: '',
+        name: '取消',
+      }];
     this.setState({
+      newLinkUrls,
       isOpen: !this.state.isOpen,
     });
   }
 
   getAllList() {
-    console.log(1111);
     // const pageNum = this.state.pageNum;
     //
     // const pageTotal = Math.ceil(this.props.state.totalNum / 10);
@@ -171,6 +210,18 @@ class listView extends Component {
     //  this.setState({ pageNum: this.state.pageNum });
     //  this.props.getListRequest(pageNum + 1);
     // }
+  }
+
+  toDetailContainer(pid) {
+    this.props.getChargeDesc({
+      access_token: Helper.getToken(),
+      parameter: {
+        pid,
+        originLat: this.state.userLat,
+        originLng: this.state.userLng,
+      },
+    });
+    Actions.detailInfo();
   }
 
   openMapUrl(index) {
@@ -192,29 +243,24 @@ class listView extends Component {
     }
   }
 
-  toDetailContainer(pid) {
-    this.props.getChargeDesc({
-      pid,
-    });
-    Actions.detailInfo();
-  }
   back() {
     Actions.pop();
   }
 
   renderList(data) {
-    let imageSrc = null;
+    let uri;
     switch (data.carBrand) {
       case '348D':
-        imageSrc = require('../../image/tesla.png');
+        uri = require('../../image/tesla.png');
         break;
       case '400F':
-        imageSrc = require('../../image/bmw.png');
+        uri = require('../../image/bmw.png');
         break;
       case '3701':
-        imageSrc = require('../../image/tengshi.png');
+        uri = require('../../image/tengshi.png');
         break;
       default:
+        uri = require('../../image/tengshi.png');
         break;
     }
     return (
@@ -223,9 +269,10 @@ class listView extends Component {
           <View>
             <Image
               source={
-                  data.plotKind === 0 ?
-                  require('../../image/charge_station_common.png') :
-                  require('../../image/ex_station_special.png')}
+                data.plotKind === 0 ?
+                require('../../image/charge_station_common.png') :
+                require('../../image/ex_station_special.png')
+              }
             />
           </View>
           <View style={{ width: 200 }}>
@@ -233,9 +280,7 @@ class listView extends Component {
           </View>
           <View>
             <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={imageSrc}
-              />
+              <Image source={uri}/>
             </View>
           </View>
         </View>
@@ -254,12 +299,12 @@ class listView extends Component {
                 {
                   data.socker_num.sDCquick_num + data.socker_num.sACquick_num > 0 ?
                     <Text>快冲 {data.socker_num.sDCquick_num + data.socker_num.sACquick_num }个</Text>
-                    : <Text/>
+                      : <Text/>
                 }
                 {
                   data.socker_num.sACslow_num + data.socker_num.sDCslow_num > 0 ?
                     <Text>慢冲 {data.socker_num.sACslow_num + data.socker_num.sDCslow_num }个</Text>
-                    : <Text/>
+                      : <Text/>
                 }
               </View>
             </View>
@@ -277,13 +322,12 @@ class listView extends Component {
             <Text>{data.payment}</Text>
           </View>
         </View>
-
         <View style={styles.horizontalLine}/>
         <View style={styles.buttonView}>
           <TouchableHighlight
             underlayColor="transparent"
             style={styles.buttonStyle}
-            onPress={this.setModalVisible}
+            onPress={() => this.setModalVisible(data)}
           >
             <Text style={styles.buttonText}>
               引导
@@ -312,12 +356,14 @@ class listView extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Button style={styles.logintext} onPress={this.back}>返回</Button>
-          <TextInput
-            placeholderTextColor="#E0E0E0"
-            style={styles.textinput}
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-          />
+          <View style={styles.textInputView}>
+            <TextInput
+              placeholderTextColor="#E0E0E0"
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              keyboardType="default"
+            />
+          </View>
           <Button style={styles.search} onPress={this.back}>地图</Button>
         </View>
         <ListView
@@ -326,10 +372,10 @@ class listView extends Component {
           onEndReachedThreshold={20}
           dataSource={dataSource}
           renderRow={(rowData) =>
-            <View style={styles.row}>{
-              this.renderList(rowData)}
+            <View style={styles.row}>
+             {this.renderList(rowData)}
             </View>
-          }
+            }
         />
         <Modal
           position={"bottom"}
@@ -355,10 +401,10 @@ class listView extends Component {
                       {
                         index < this.state.newLinkUrls.length - 1 ?
                           (<View style={styles.horizontalLine}/>) : (<View />)
-                       }
+                      }
                   </View>)
                 )
-            }
+              }
           </View>
         </Modal>
       </View>
@@ -377,6 +423,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(listView);

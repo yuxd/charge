@@ -4,23 +4,59 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import * as WeChat from 'react-native-wechat';
+import Button from 'react-native-button';
 import UserManagementActions from '../../actions/UserManagementActions';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'white',
+    backgroundColor: '#4CC4F6',
+  },
+
+  textInputView: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 5,
+  },
+  loginTextStyle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    fontWeight: '500',
+  },
+  logintext: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: '500',
+  },
   rootContainer: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
-    marginTop: 53,
-    padding: 10,
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'stretch',
+    alignItems: 'center',
     marginTop: 3,
     marginBottom: 3,
   },
@@ -37,12 +73,12 @@ const styles = StyleSheet.create({
     height: 20,
   },
   lineContainer: {
-    backgroundColor: '#808080',
+    backgroundColor: '#DCDCDC',
     height: 1,
   },
   textInput: {
     flex: 9,
-    height: 30,
+    height: 35,
     color: '#000000',
     margin: 0,
     padding: 0,
@@ -55,6 +91,7 @@ const styles = StyleSheet.create({
   textLoginContainer: {
     backgroundColor: '#1e90ff',
     borderRadius: 2,
+    height: 40,
   },
   textLogin: {
     flex: 1,
@@ -68,6 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderRadius: 2,
+    height: 40,
+    marginTop: 10,
   },
   textWeiXinLogin: {
     flex: 1,
@@ -109,75 +148,90 @@ class Login extends Component {
   render() {
     return (
       <View style={styles.rootContainer}>
-        <View style={styles.rowContainer}>
-          <View style={styles.smallImageContainer}>
-            <Image
-              source={require('../../image/login_icon_phonenumber.png')}
-              style={styles.smallImage}
-            />
+        <View style={styles.header}>
+          <Text
+            style={[styles.search, { marginLeft: 10 }]}
+            onPress={() => { Actions.pop(); }}
+          >
+            返回
+          </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.loginTextStyle}>登录</Text>
           </View>
-          <TextInput
-            placeholder="请输入手机号"
-            placeholderTextColor="#808080"
-            style={styles.textInput}
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-            value={this.state.userName}
-            onChangeText={text => { this.changeState('userName', text); }}
-          />
+          <Text style={styles.search} onPress={() => { Actions.regist(); }}>注册</Text>
         </View>
-        <View style={styles.lineContainer}/>
-        <View style={styles.rowContainer}>
-          <View style={styles.smallImageContainer}>
-            <Image
-              source={require('../../image/login_icon_password.png')}
-              style={styles.smallImage}
-            />
+        <View>
+          <Image
+            source={require('../../image/bg_about.png')}
+            style={{ width: undefined, height: 320, justifyContent: 'flex-end' }}
+          >
+            <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+              <View style={styles.rowContainer}>
+                <View style={styles.smallImageContainer}>
+                  <Image
+                    source={require('../../image/login_icon_phonenumber.png')}
+                    style={styles.smallImage}
+                  />
+                </View>
+                <TextInput
+                  placeholder="请输入手机号"
+                  placeholderTextColor="#808080"
+                  style={styles.textInput}
+                  underlineColorAndroid="transparent"
+                  keyboardType="default"
+                  value={this.state.userName}
+                  onChangeText={text => { this.changeState('userName', text); }}
+                />
+              </View>
+              <View style={styles.lineContainer}/>
+              <View style={styles.rowContainer}>
+                <View style={styles.smallImageContainer}>
+                  <Image
+                    source={require('../../image/login_icon_password.png')}
+                    style={styles.smallImage}
+                  />
+                </View>
+                <TextInput
+                  ref={c => { this.passwordInput = c; }}
+                  placeholder="请输入密码"
+                  placeholderTextColor="#808080"
+                  style={styles.textInput}
+                  secureTextEntry
+                  underlineColorAndroid="transparent"
+                  keyboardType="default"
+                  value={this.state.password}
+                  onChangeText={text => { this.changeState('password', text); }}
+                />
+              </View>
+              <View style={styles.lineContainer}/>
+              <View style={[styles.rowContainer, styles.rightRowContainer]}>
+                <Text
+                  style={styles.forgetPassword}
+                  onPress={() => { Actions.findPassword(); }}
+                >
+                  忘记密码?
+                </Text>
+              </View>
+            </View>
+          </Image>
+        </View>
+        <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+          <View style={[styles.rowContainer, styles.textLoginContainer]}>
+            <Text
+              style={styles.textLogin}
+              onPress={this.onLogin}
+            >
+              登录
+            </Text>
           </View>
-          <TextInput
-            ref={c => { this.passwordInput = c; }}
-            placeholder="请输入密码"
-            placeholderTextColor="#808080"
-            style={styles.textInput}
-            secureTextEntry
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-            value={this.state.password}
-            onChangeText={text => { this.changeState('password', text); }}
-          />
-        </View>
-        <View style={styles.lineContainer}/>
-        <View style={[styles.rowContainer, styles.rightRowContainer]}>
-          <Text
-            style={styles.forgetPassword}
-            onPress={() => { Actions.findPassword(); }}
-          >
-            忘记密码?
-          </Text>
-        </View>
-        <View style={[styles.rowContainer, styles.textLoginContainer]}>
-          <Text
-            style={styles.textLogin}
-            onPress={this.onLogin}
-          >
-            登陆
-          </Text>
-        </View>
-        <View style={[styles.rowContainer, styles.textWeiXinLoginContainer]}>
-          <Text
-            style={styles.textWeiXinLogin}
-            onPress={this.onWeiXinLogin}
-          >
-            微信登陆
-          </Text>
-        </View>
-        <View style={[styles.rowContainer, styles.textWeiXinLoginContainer]}>
-          <Text
-            style={styles.textWeiXinLogin}
-            onPress={() => { Actions.regist(); }}
-          >
-            注册
-          </Text>
+          <View style={[styles.rowContainer, styles.textWeiXinLoginContainer]}>
+            <Text
+              style={styles.textWeiXinLogin}
+              onPress={this.onWeiXinLogin}
+            >
+              微信登录
+            </Text>
+          </View>
         </View>
       </View>
     );

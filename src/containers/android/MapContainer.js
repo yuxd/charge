@@ -12,6 +12,7 @@ function mapStateToProps(state) {
     location: state.mapReducer.location,
     listMapFlag: state.mapReducer.listMapFlag,
     mapListData: state.mapReducer.mapListData,
+    locationFlag: state.mapReducer.locationFlag,
   };
 }
 

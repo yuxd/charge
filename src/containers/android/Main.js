@@ -17,9 +17,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from 'react-native-button';
 import { Actions } from 'react-native-router-flux';
+import Toast from 'react-native-root-toast';
 import Map from './MapContainer';
-import LeftMenu from './LeftMenu';
 import ShellsDetail from './ShellsDetail';
+import ChooseActions from '../../actions/ChooseActions';
+import { Global } from '../../Global';
+import Helper from '../../utils/helper';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,22 +42,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  textinput: {
+  textInputView: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    color: '#e5e5e5',
-    fontSize: 16,
-  },
+    borderRadius: 5,
 
+  },
+  textInput: {
+    fontSize: 16,
+    marginTop: -10,
+    color: '#e5e5e5',
+  },
   logintext: {
     color: '#FFFFFF',
-    padding: 5,
     fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   search: {
     color: '#FFFFFF',
-    padding: 5,
+    alignItems: 'center',
     fontSize: 16,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   image: {
     width: 50,
@@ -71,10 +82,42 @@ class Main extends Component {
       modalVisible: false,
       transparent: false,
       listMapFlag: false,
+      lat: 0.0,
+      lng: 0.0,
     };
 
     this.openDrawer = this.openDrawer.bind(this);
+    this.search = this.search.bind(this);
     this.imagePress = this.imagePress.bind(this);
+    this.myLocation = this.myLocation.bind(this);
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          lat,
+          lng,
+        });
+        this.props.actions.setOwnLocation({
+          lat,
+          lng,
+        });
+      },
+      error => {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
+          duration: Toast.durations.LONG, // toast显示时长
+          position: Toast.positions.CENTER, // toast位置
+          shadow: true, // toast是否出现阴影
+          animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+          hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+          delay: 0, // toast显示的延时
+        });
+      },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -84,15 +127,35 @@ class Main extends Component {
   }
 
   openDrawer() {
-    this.drawer.openDrawer();
+    Actions.leftMenu();
   }
 
   search() {
     Actions.searchList();
   }
 
+  myLocation() {
+    this.props.actions.setOwnLocation({
+      lat: this.state.lat,
+      lng: this.state.lng,
+    });
+  }
+
   imagePress() {
-    Actions.choose();
+    if (Global.appState.user) {
+      this.props.actions.getCustomOwnData({
+        access_token: Helper.getToken(),
+      });
+    } else {
+      Toast.show('请先登录！', {
+        duration: Toast.durations.LONG, // toast显示时长
+        position: Toast.positions.CENTER, // toast位置
+        shadow: true, // toast是否出现阴影
+        animation: true, // toast显示/隐藏的时候是否需要使用动画过渡
+        hideOnPress: true, // 是否可以通过点击事件对toast进行隐藏
+        delay: 0, // toast显示的延时
+      });
+    }
   }
 
   mapToList() {
@@ -111,46 +174,47 @@ class Main extends Component {
   }
 
   render() {
-    const navigationView = (
-      <LeftMenu/>
-    );
-
     return (
-      <DrawerLayoutAndroid
-        drawerWidth={300}
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
-        ref={(drawer) => { this.drawer = drawer; }}
-        renderNavigationView={() => navigationView}
-      >
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Button style={styles.logintext} onPress={this.openDrawer}>登 录</Button>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Button style={styles.logintext} onPress={this.openDrawer}>登录</Button>
+          <View style={styles.textInputView}>
             <TextInput
               placeholder="搜索地点"
               placeholderTextColor="#E0E0E0"
-              style={styles.textinput}
+              style={styles.textInput}
               underlineColorAndroid="transparent"
               keyboardType="default"
               onFocus={this.search}
             />
-            {this.button()}
           </View>
-          <View style={styles.map}>
-            <Map/>
-            <ShellsDetail/>
-            <View style={{ flex: 1, top: 60, position: 'absolute', right: 10 }}>
-              <TouchableHighlight
-                style={{ width: 24, height: 24, justifyContent: 'center', alignItems: 'center' }}
-                onPress={this.imagePress}
-              >
-                <Image
-                  source={require('../../image/funnel.png')}
-                />
-              </TouchableHighlight>
-            </View>
+          {this.button()}
+        </View>
+        <View style={styles.map}>
+          <Map/>
+          <ShellsDetail/>
+          <View style={{ flex: 1, top: 60, position: 'absolute', right: 10 }}>
+            <TouchableHighlight
+              style={{ width: 24, height: 24, justifyContent: 'center', alignItems: 'center' }}
+              onPress={this.imagePress}
+            >
+              <Image
+                source={require('../../image/funnel.png')}
+              />
+            </TouchableHighlight>
+          </View>
+          <View style={{ flex: 1, bottom: 60, position: 'absolute', left: 10 }}>
+            <TouchableHighlight
+              style={{ width: 24, height: 24, justifyContent: 'center', alignItems: 'center' }}
+              onPress={this.myLocation}
+            >
+              <Image
+                source={require('../../image/icon-myLocation.png')}
+              />
+            </TouchableHighlight>
           </View>
         </View>
-      </DrawerLayoutAndroid>
+      </View>
     );
   }
 }
@@ -162,7 +226,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    actions: bindActionCreators(ChooseActions, dispatch),
+  };
 }
 
 export default connect(

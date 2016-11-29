@@ -19,6 +19,7 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import detailActions from '../../actions/detailActions';
+import Helper from '../../utils/helper';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -96,21 +97,9 @@ class ShellsDetail extends Component {
       data: null,
       show: this.props.showOrHide,
       isOpen: false,
-      newLinkUrls: [
-        {
-          url: 'baidumap://map/direction?destination=39.6,116.5',
-          name: '百度',
-        }, {
-          url: 'androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=36.2&lon=116.1&dev=0',
-          name: '高德',
-        }, {
-          url: '',
-          name: '取消',
-        }],
+      newLinkUrls: [],
     };
-    this.setModalVisible = this.setModalVisible.bind(this);
-    this.toDetailContainer = this.toDetailContainer.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    Helper.bindMethod(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -120,9 +109,21 @@ class ShellsDetail extends Component {
     });
   }
 
-  setModalVisible() {
+  setModalVisible(data) {
+    const newLinkUrls = [
+      {
+        url: `baidumap://map/direction?destination=${data.location.latitude},${data.location.longitude}`,
+        name: '百度',
+      }, {
+        url: `androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=${data.location.latitude}&lon=${data.location.longitude}&dev=0`,
+        name: '高德',
+      }, {
+        url: '',
+        name: '取消',
+      }];
     this.setState({
       isOpen: !this.state.isOpen,
+      newLinkUrls,
     });
   }
 
@@ -285,7 +286,7 @@ class ShellsDetail extends Component {
             <TouchableHighlight
               underlayColor="transparent"
               style={styles.buttonStyle}
-              onPress={this.setModalVisible}
+              onPress={() => this.setModalVisible(data)}
             >
               <Text style={styles.buttonText}>
                 引导

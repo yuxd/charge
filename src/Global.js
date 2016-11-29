@@ -6,10 +6,13 @@ const Global = {
   appState: {
     user: null,
   },
+
 };
 
 const appStateDefault = {
   user: null,
+  boolFirstLaunch: true,
+  visitor: null,
 };
 
 export {

@@ -96,7 +96,7 @@ class Introduction extends Component {
             <View style={styles.buttonView}>
               <NavButton
                 onPress={() => {
-                  ToastAndroid.show('启动应用', ToastAndroid.SHORT);
+                  Actions.mainModule();
                 }}
                 text="启动应用"
                 style={styles.startBtn}

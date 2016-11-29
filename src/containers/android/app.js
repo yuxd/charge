@@ -12,6 +12,7 @@ import {
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Router, Scene, Modal, ActionConst } from 'react-native-router-flux';
 import { Provider, connect } from 'react-redux';
+import deepcopy from 'deepcopy';
 import store from 'react-native-simple-store';
 import ChargeView from './../../containers/android/ChargeView';
 import routeReducerCreator from './../../reducers/routeReducerCreator';
@@ -24,15 +25,17 @@ import Choose from '../../containers/android/Choose';
 import About from './../../containers/android/About';
 import HelpView from './../../containers/android/HelpView';
 import Main from './../../containers/android/Main';
+import Introduction from './../../containers/android/Introduction';
 import SearchList from '../../containers/android/SearchList';
 import ChargeList from '../../containers/android/ChargeList';
+import WeChat from '../../containers/android/WeChat';
+import LeftMenu from '../../containers/android/LeftMenu';
 import { Global } from '../../Global';
 import imageViewPage from '../../containers/android/imageViewPager';
 import Regist from './Regist';
 import UserAgreement from './UserAgreement';
 import FindPassword from './FindPassword';
 import Error from './Error';
-import Introduction from './Introduction';
 
 const styles = StyleSheet.create({
   textInput: {
@@ -51,6 +54,8 @@ const styles = StyleSheet.create({
 });
 class App extends React.Component {
   componentWillUnmount() {
+    Global.appState.boolFirstLaunch = false;
+    Global.appState = deepcopy(Global.appState);
     store.save('appState', Global.appState);
   }
 
@@ -65,10 +70,11 @@ class App extends React.Component {
           <Scene key="modal" component={Modal}>
             <Scene key="root">
               <Scene key="start" component={Start} title="Start" hideNavBar hideTabBar initial/>
-              <Scene key="login" component={Login} title="登陆" hideNavBar={false}/>
-              <Scene key="regist" component={Regist} title="注册" hideNavBar={false}/>
+              <Scene key="login" component={Login} hideNavBar/>
+              <Scene key="regist" component={Regist} hideNavBar/>
               <Scene key="userAgreement" component={UserAgreement} title="用户协议" hideNavBar={false}/>
               <Scene key="findPassword" component={FindPassword} title="手机找回密码" hideNavBar={false}/>
+              <Scene key="introduction" component={Introduction} title="Introduction" hideNavBar/>
               <Scene key="mainModule" direction="horizontal">
                 <Scene
                   key="main"
@@ -76,16 +82,11 @@ class App extends React.Component {
                   title="Main"
                   hideNavBar
                 />
-                <Scene
-                  key="introduction"
-                  component={Introduction}
-                  title="Introduction"
-                  hideNavBar
-                />
+
                 <Scene
                   key="detailInfo"
                   component={DetailInfo}
-                  title="位置详情"
+                  title="DetailInfo"
                   hideNavBar
                 />
                 <Scene
@@ -98,10 +99,7 @@ class App extends React.Component {
               <Scene
                 key="choose"
                 component={Choose}
-                title="个人定制"
-                rightTitle="重置"
-                onRight={this.test1}
-                hideNavBar={false}
+                hideNavBar
               />
               <Scene
                 key="searchList"
@@ -109,9 +107,14 @@ class App extends React.Component {
                 hideNavBar
               />
               <Scene
-                key="about" component={About}
-                title="关于"
-                hideNavBar={false}
+                key="about"
+                component={About}
+                hideNavBar
+              />
+              <Scene
+                key="leftMenu"
+                component={LeftMenu}
+                hideNavBar
               />
               <Scene
                 key="helpView"
@@ -120,10 +123,14 @@ class App extends React.Component {
                 hideNavBar={false}
               />
               <Scene
+                key="weChat"
+                component={WeChat}
+                hideNavBar
+              />
+              <Scene
                 key="chargeView"
                 component={ChargeView}
-                title="桩家视界"
-                hideNavBar={false}
+                hideNavBar
               />
               <Scene
                 key="chargeList"
@@ -141,5 +148,4 @@ class App extends React.Component {
     );
   }
 }
-
 export default App;

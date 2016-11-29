@@ -41,8 +41,6 @@ class Map extends Component {
     super(props);
     // 初始状态
     this.state = {
-      initialPosition: 'unknown',
-      lastPosition: 'unknown',
       center: {
         latitude: 40.008456800067,
         longitude: 116.47474416608,
@@ -50,20 +48,28 @@ class Map extends Component {
       zoom: 11,
       userTrackingMode: Mapbox.userTrackingMode.none,
       annotations: [],
-      userLocation: { lng: 0.0, lat: 0.0 },
-      watchID: null,
+      userLat: 0.0,
+      userLng: 0.0,
     };
     Helper.bindMethod(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        const initialPosition = JSON.stringify(position);
-        this.setState({ initialPosition });
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.setState({
+          userLat: lat,
+          userLng: lng,
+        });
+        this.props.setMyLocation({
+          lat,
+          lng,
+        });
       },
       error => {
-        Toast.show(`initialPosition_error${error.message}`, {
+        Toast.show(`获取当前位置失败,原因:${error}`, {
           duration: Toast.durations.LONG, // toast显示时长
           position: Toast.positions.CENTER, // toast位置
           shadow: true, // toast是否出现阴影
@@ -72,24 +78,8 @@ class Map extends Component {
           delay: 0, // toast显示的延时
         });
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
     );
-    const newWatchID = navigator.geolocation.watchPosition(
-      position => {
-        const lastPosition = JSON.stringify(position);
-        if (lastPosition !== 'unknown') {
-          this.setState({
-            userLocation: {
-              lng: lastPosition.coords.longitude,
-              lat: lastPosition.coords.latitude,
-            },
-            lastPosition,
-          });
-        }
-      }
-    );
-
-    this.setState({ watchID: newWatchID });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -127,30 +117,34 @@ class Map extends Component {
     this.setState({
       annotations: [...this.state.annotations, ...showMarkerArr],
     });
-    if (this.props.location.latitude !== nextProps.location.latitude &&
-      this.props.location.longitude !== nextProps.location.longitude) {
+    if (nextProps.locationFlag) {
       this.map.setCenterCoordinate(nextProps.location.latitude, nextProps.location.longitude);
+      this.props.locationFlagBack();
     }
-  }
-
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.state.watchID);
   }
 
   onRegionDidChange(location) {
     this.props.setVisitorData({
-      originLat: location.latitude,
-      originLng: location.longitude,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      radius: 5000,
+      access_token: Helper.getToken(),
+      parameter: {
+        originLat: location.latitude,
+        originLng: location.longitude,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        radius: 5000,
+      },
     });
     this.setState({ currentZoom: location.zoomLevel });
   }
 
   onOpenAnnotation(annotation) {
     this.props.setSingleData({
-      pid: annotation.id,
+      access_token: Helper.getToken(),
+      parameter: {
+        pid: annotation.id,
+        originLng: this.state.userLng,
+        originLat: this.state.userLat,
+      },
     });
   }
 
@@ -173,11 +167,11 @@ class Map extends Component {
           initialCenterCoordinate={this.state.center}
           initialZoomLevel={this.state.zoom}
           initialDirection={0}
-          rotateEnabled={false}
+          rotateEnabled
           scrollEnabled
           logoIsHidden
           attributionButtonIsHidden
-          zoomEnabled={false}
+          zoomEnabled
           showsUserLocation
           styleURL={Mapbox.mapStyles.streets}
           userTrackingMode={this.state.userTrackingMode}

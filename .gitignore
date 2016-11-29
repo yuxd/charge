@@ -32,9 +32,6 @@ local.properties
 # node.js
 #
 node_modules/
-# react-native-swipeout need to modify
-!node_modules/react-native-swipeout/
-
 npm-debug.log
 
 # BUCK
@@ -42,4 +39,3 @@ buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
-android/app/build

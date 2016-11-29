@@ -9,6 +9,7 @@ import { View,
   Image,
   ListView,
   TouchableHighlight,
+  TouchableOpacity,
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
@@ -17,111 +18,129 @@ import { View,
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from 'react-native-button';
+import { Actions } from 'react-native-router-flux';
 import Helper from '../../utils/helper';
+import ChooseActions from '../../actions/ChooseActions';
+import { Global } from '../../Global';
 
 const styles = StyleSheet.create({
-  thumb: {
-    padding: 10,
-    height: 60,
-    overflow: 'hidden',
-    backgroundColor: 'white',
-    width: 80,
-    marginLeft: 13,
-    marginTop: 10,
-    borderColor: '#D8D8D8',
-    borderWidth: 1,
+  textLogin: {
+    flex: 1,
+    height: 30,
+    color: '#1e90ff',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
-  thumb1: {
-    padding: 10,
-    height: 60,
-    overflow: 'hidden',
-    backgroundColor: 'white',
-    width: 80,
-    marginLeft: 13,
-    marginTop: 10,
-    borderColor: '#3366FF',
+  textLoginContainer: {
+    borderRadius: 2,
+    height: 40,
     borderWidth: 1,
+    borderColor: '#1e90ff',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  header: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'white',
+    backgroundColor: '#4CC4F6',
+  },
+  loginTextStyle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignSelf: 'center',
+    fontWeight: '500',
+  },
+  search: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: '500',
   },
   longButton: {
-    padding: 2,
-    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 23,
     overflow: 'hidden',
     backgroundColor: 'white',
     width: 111,
-    marginLeft: 13,
-    marginTop: 10,
     borderColor: '#D8D8D8',
     borderWidth: 1,
   },
   longButton1: {
-    padding: 2,
-    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 23,
     overflow: 'hidden',
     backgroundColor: 'white',
     width: 111,
-    marginLeft: 13,
-    marginTop: 10,
     borderColor: '#3366FF',
     borderWidth: 1,
   },
   image: {
-    width: 20,
-    height: 20,
-    alignSelf: 'center',
-  },
-  text: {
-    alignSelf: 'center',
-    marginTop: 5,
-    fontSize: 10,
-    color: '#282828',
-  },
-  text1: {
-    alignSelf: 'center',
-    marginTop: 5,
-    fontSize: 10,
-    color: '#3366FF',
+    width: 83.3,
+    height: 56,
   },
   flexContainer: {
     flexDirection: 'row',
+    paddingBottom: 10,
+    justifyContent: 'space-between',
+    flex: 1,
   },
   brand: {
-    marginLeft: 13,
-    marginTop: 10,
+    paddingBottom: 10,
   },
   container: {
-    height: 250,
     borderBottomWidth: 1,
     borderBottomColor: '#D8D8D8',
-    marginTop: 45,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   chargeContainer: {
-    height: 70,
     borderBottomWidth: 1,
     borderBottomColor: '#D8D8D8',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   payContainer: {
-    height: 310,
     borderBottomWidth: 1,
     borderBottomColor: '#D8D8D8',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   chargeText: {
-    alignSelf: 'center',
+    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontSize: 10,
     color: '#282828',
   },
   chargeText1: {
-    alignSelf: 'center',
+    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontSize: 10,
     color: '#3366FF',
   },
-  testObj: {
-    position: 'absolute',
-    left: 100,
-    top: 100,
-  },
   toolbar: {
     backgroundColor: '#e9eaed',
-    height: 56,
+    height: 40,
   },
 });
 
@@ -129,198 +148,13 @@ class Choose extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      brands: [
-        [
-          {
-            name: '全部',
-            select: true,
-          },
-          {
-            name: '特斯拉',
-            select: false,
-          },
-          {
-            name: '腾势',
-            select: false,
-          },
-          {
-            name: '宝马',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '比亚迪(电动)',
-            select: false,
-          },
-          {
-            name: '荣威',
-            select: false,
-          },
-          {
-            name: '北汽',
-            select: false,
-          },
-          {
-            name: '众泰',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '比亚迪(混动)',
-            select: false,
-          },
-          {
-            name: '江铃',
-            select: false,
-          },
-          {
-            name: '江淮',
-            select: false,
-          },
-          {
-            name: '其他',
-            select: false,
-          },
-        ],
-      ],
-      chargeType: [
-        {
-          name: '全部',
-          select: true,
-        },
-        {
-          name: '快冲',
-          select: false,
-        },
-        {
-          name: '慢充',
-          select: false,
-        },
-      ],
-      parking: [
-        {
-          name: '全部',
-          select: true,
-        },
-        {
-          name: '免费',
-          select: false,
-        },
-        {
-          name: '付费',
-          select: false,
-        },
-      ],
-      property: [
-        {
-          name: '全部',
-          select: true,
-        },
-        {
-          name: '共用',
-          select: false,
-        },
-        {
-          name: '专用',
-          select: false,
-        },
-      ],
-      allPay: [
-        {
-          name: '全部',
-          select: true,
-        },
-      ],
-      quickPay: [
-        [
-          {
-            name: '免费',
-            select: false,
-          },
-          {
-            name: '现金',
-            select: false,
-          },
-          {
-            name: '微信',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '支付宝',
-            select: false,
-          },
-          {
-            name: '星星APP',
-            select: false,
-          },
-          {
-            name: '特来电APP',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '聚电桩APP',
-            select: false,
-          },
-          {
-            name: '电桩APP',
-            select: false,
-          },
-          {
-            name: '绿狗APP',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '依威能源APP',
-            select: false,
-          },
-          {
-            name: 'E APP',
-            select: false,
-          },
-          {
-            name: '其他APP',
-            select: false,
-          },
-        ],
-      ],
-      payCard: [
-        [
-          {
-            name: '国网普通卡',
-            select: false,
-          },
-          {
-            name: 'SGCC HW. card',
-            select: false,
-          },
-          {
-            name: '中国普天充值卡',
-            select: false,
-          },
-        ],
-        [
-          {
-            name: '小易充值卡',
-            select: false,
-          },
-          {
-            name: '易冲卡',
-            select: false,
-          },
-          {
-            name: '其他充值卡',
-            select: false,
-          },
-        ],
-      ],
+      brands: [],
+      chargeType: [],
+      parking: [],
+      property: [],
+      allPay: [],
+      quickPay: [],
+      payCard: [],
       toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
@@ -330,10 +164,19 @@ class Choose extends Component {
   }
 
   componentWillMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({});
+    this.setState({
+      brands: nextProps.brands,
+      chargeType: nextProps.chargeType,
+      parking: nextProps.parking,
+      property: nextProps.property,
+      allPay: nextProps.allPay,
+      quickPay: nextProps.quickPay,
+      payCard: nextProps.payCard,
+    });
   }
 
   handlePress(name) {
@@ -423,6 +266,82 @@ class Choose extends Component {
     }
     this.setState({ allPay: this.state.allPay });
     this.setState({ payCard: this.state.payCard });
+  }
+
+  saveCustom() {
+    const brands = this.state.brands;
+    const chargeType = this.state.chargeType;
+    const parking = this.state.parking;
+    const property = this.state.property;
+    const allPay = this.state.allPay;
+    const quickPay = this.state.quickPay;
+    const payCard = this.state.payCard;
+    let brandCar;
+    let type;
+    let pay;
+    let kind;
+    let paymentType = '';
+    for (const row of brands) {
+      for (const carName of row) {
+        if (carName.select) {
+          brandCar = carName.value;
+        }
+      }
+    }
+    for (const model of chargeType) {
+      if (model.select) {
+        type = model.value;
+      }
+    }
+    for (const payType of parking) {
+      if (payType.select) {
+        pay = payType.value;
+      }
+    }
+    for (const payKind of property) {
+      if (payKind.select) {
+        kind = payKind.value;
+      }
+    }
+    if (allPay[0].select) {
+      paymentType = allPay[0].value;
+    } else {
+      for (const rowQuick of quickPay) {
+        for (const rowQuickPay of rowQuick) {
+          if (rowQuickPay.select) {
+            if (paymentType) {
+              paymentType = `${paymentType}${rowQuickPay.value}|`;
+            } else {
+              paymentType = `${rowQuickPay.value}|`;
+            }
+          }
+        }
+      }
+      for (const rowCard of payCard) {
+        for (const rowPayCard of rowCard) {
+          if (rowPayCard.select) {
+            if (paymentType) {
+              paymentType = `${paymentType}${rowPayCard.value}|`;
+            } else {
+              paymentType = `${rowPayCard.value}|`;
+            }
+          }
+        }
+      }
+    }
+    if (paymentType.endsWith('|')) {
+      paymentType = paymentType.substring(0, paymentType.length - 1);
+    }
+    this.props.setCustomData({
+      access_token: Global.appState.user.accessToken,
+      parameter: {
+        parking_fee: pay,
+        payment: paymentType,
+        plot_kind: kind,
+        chain_code: brandCar,
+        charging_mode: type,
+      },
+    });
   }
 
   allPay(data, index) {
@@ -591,43 +510,57 @@ class Choose extends Component {
   }
 
   renderTask(brand, index) {
-    const randomImages = [
-      require('../../image/logo.png'),
-      require('../../image/login.png'),
+    const imagesUrl = [
+      require('../../image/custom/CarBrand_no.png'),
+      require('../../image/custom/tesla_no.png'),
+      require('../../image/custom/tengshi_no.png'),
+      require('../../image/custom/baoma_no.png'),
+      require('../../image/custom/byd_no.png'),
+      require('../../image/custom/rongwei_no.png'),
+      require('../../image/custom/beiqi_no.png'),
+      require('../../image/custom/zhongtai_no.png'),
+      require('../../image/custom/byd_special_no.png'),
+      require('../../image/custom/jiangling_no.png'),
+      require('../../image/custom/jianghuai_no.png'),
+      require('../../image/custom/other_no.png'),
+    ];
+    const imageSelectUrl = [
+      require('../../image/custom/CarBrand_yes.png'),
+      require('../../image/custom/tesla_yes.png'),
+      require('../../image/custom/tengshi_yes.png'),
+      require('../../image/custom/baoma_yes.png'),
+      require('../../image/custom/byd_yes.png'),
+      require('../../image/custom/rongwei_yes.png'),
+      require('../../image/custom/beiqi_yes.png'),
+      require('../../image/custom/zhongtai_yes.png'),
+      require('../../image/custom/byd_special_yes.png'),
+      require('../../image/custom/jiangling_yes.png'),
+      require('../../image/custom/jianghuai_yes.png'),
+      require('../../image/custom/other_yes.png'),
     ];
 
     if (brand.select) {
       return (
-        <Button
-          containerStyle={styles.thumb1}
-          key={index}
-          activeOpacity={1}
-        >
-          <View>
-            <Image
-              style={styles.image}
-              source={randomImages[Math.floor(Math.random() * randomImages.length)]}
-            />
-            <Text style={styles.text1}>{brand.name}</Text>
-          </View>
-        </Button>
+        <View key={index}>
+          <Image
+            style={styles.image}
+            source={imageSelectUrl[brand.id]}
+          />
+        </View>
       );
     }
     return (
-      <Button
-        containerStyle={styles.thumb}
-        key={index}
-        onPress={() => { this.handlePress(brand.name); }}
-        activeOpacity={1}
-      >
-        <View>
+      <View key={index}>
+        <TouchableOpacity
+          onPress={() => { this.handlePress(brand.name); }}
+          activeOpacity={1}
+        >
           <Image
             style={styles.image}
-            source={randomImages[Math.floor(Math.random() * randomImages.length)]}
+            source={imagesUrl[brand.id]}
           />
-          <Text style={styles.text}>{brand.name}</Text>
-        </View>
-      </Button>
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -661,68 +594,96 @@ class Choose extends Component {
   }
 
   render() {
+    if (this.state.brands.length > 0) {
+      return (
+        <View style={{ flex: 1 }}>
+          <View style={styles.header}>
+            <Text
+              style={[styles.search, { marginLeft: 10 }]}
+              onPress={() => { Actions.pop(); }}
+            >
+              返回
+            </Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.loginTextStyle}>个人定制</Text>
+            </View>
+            <Text style={styles.search} onPress={() => { Actions.regist(); }}>重置</Text>
+          </View>
+          <ScrollView >
+            <View>
+              <View style={styles.container}>
+                <Text style={styles.brand}>按车辆品牌</Text>
+                <View>
+                  {this.state.brands.map(this.test)}
+                </View>
+              </View>
+              <View style={styles.chargeContainer}>
+                <Text style={styles.brand}>按快冲慢充</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.chargeType.map(this.charge)}
+                </View>
+              </View>
+              <View style={styles.chargeContainer}>
+                <Text style={styles.brand}>按停车收费（元/小时）</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.parking.map(this.parking)}
+                </View>
+              </View>
+              <View style={styles.chargeContainer}>
+                <Text style={styles.brand}>按属性</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.property.map(this.property)}
+                </View>
+              </View>
+              <View style={styles.payContainer}>
+                <Text style={styles.brand}>按支付方式（可多选）</Text>
+                <View style={styles.flexContainer}>
+                  {this.state.allPay.map(this.allPay)}
+                </View>
+                <Text style={styles.brand}>便捷支付</Text>
+                <View>
+                  {this.state.quickPay.map(this.quickPay)}
+                </View>
+                <Text style={styles.brand}>充值卡</Text>
+                <View>
+                  {this.state.payCard.map(this.payCard)}
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+          <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+            <View style={[styles.rowContainer, styles.textLoginContainer]}>
+              <Text
+                style={styles.textLogin}
+                onPress={this.saveCustom}
+              >
+                保存
+              </Text>
+            </View>
+          </View>
+        </View>
+      );
+    }
     return (
-      <View style={{ flex: 1 }}>
-        <ScrollView >
-          <View>
-            <View style={styles.container}>
-              <Text style={styles.brand}>按车辆品牌</Text>
-              <View>
-                {this.state.brands.map(this.test)}
-              </View>
-            </View>
-            <View style={styles.chargeContainer}>
-              <Text style={styles.brand}>按快冲慢充</Text>
-              <View style={styles.flexContainer}>
-                {this.state.chargeType.map(this.charge)}
-              </View>
-            </View>
-            <View style={styles.chargeContainer}>
-              <Text style={styles.brand}>按停车收费（元/小时）</Text>
-              <View style={styles.flexContainer}>
-                {this.state.parking.map(this.parking)}
-              </View>
-            </View>
-            <View style={styles.chargeContainer}>
-              <Text style={styles.brand}>按属性</Text>
-              <View style={styles.flexContainer}>
-                {this.state.property.map(this.property)}
-              </View>
-            </View>
-            <View style={styles.payContainer}>
-              <Text style={styles.brand}>按支付方式（可多选）</Text>
-              <View style={styles.flexContainer}>
-                {this.state.allPay.map(this.allPay)}
-              </View>
-              <Text style={styles.brand}>便捷支付</Text>
-              <View>
-                {this.state.quickPay.map(this.quickPay)}
-              </View>
-              <Text style={styles.brand}>充值卡</Text>
-              <View>
-                {this.state.payCard.map(this.payCard)}
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        <ToolbarAndroid
-          style={styles.toolbar}
-        >
-          <View style={{ height: 56, flexDirection: 'row', alignItems: 'center' }}>
-            <Button>保存</Button>
-          </View>
-        </ToolbarAndroid>
-      </View>
+      <View/>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    brands: state.chooseReducer.brands,
+    chargeType: state.chooseReducer.chargeType,
+    parking: state.chooseReducer.parking,
+    property: state.chooseReducer.property,
+    allPay: state.chooseReducer.allPay,
+    quickPay: state.chooseReducer.quickPay,
+    payCard: state.chooseReducer.payCard,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return bindActionCreators(ChooseActions, dispatch);
 }
 
 export default connect(
