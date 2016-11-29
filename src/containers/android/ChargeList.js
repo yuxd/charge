@@ -25,7 +25,7 @@ import { Actions } from 'react-native-router-flux';
 import store from 'react-native-simple-store';
 import Helper from '../../utils/helper';
 import { Global } from '../../Global';
-import chargeListActions from '../../actions/chargeListActions'
+import chargeListActions from '../../actions/chargeListActions';
 
 const styles = StyleSheet.create({
   container: {
@@ -146,7 +146,6 @@ class listView extends Component {
     this.getAllList = this.getAllList.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.toDetailContainer = this.toDetailContainer.bind(this);
-
   }
 
   componentWillMount() {
@@ -160,6 +159,18 @@ class listView extends Component {
     this.setState({
       isOpen: !this.state.isOpen,
     });
+  }
+
+  getAllList() {
+    console.log(1111);
+    // const pageNum = this.state.pageNum;
+    //
+    // const pageTotal = Math.ceil(this.props.state.totalNum / 10);
+    // if (pageNum < pageTotal) {
+    //  this.state.pageNum = pageNum + 1;
+    //  this.setState({ pageNum: this.state.pageNum });
+    //  this.props.getListRequest(pageNum + 1);
+    // }
   }
 
   openMapUrl(index) {
@@ -180,91 +191,32 @@ class listView extends Component {
       });
     }
   }
+
   toDetailContainer(pid) {
     this.props.getChargeDesc({
       pid,
     });
     Actions.detailInfo();
   }
-  getAllList() {
-    console.log(1111);
-    //const pageNum = this.state.pageNum;
-    //
-    //const pageTotal = Math.ceil(this.props.state.totalNum / 10);
-    //if (pageNum < pageTotal) {
-    //  this.state.pageNum = pageNum + 1;
-    //  this.setState({ pageNum: this.state.pageNum });
-    //  this.props.getListRequest(pageNum + 1);
-    //}
-  }
-
   back() {
     Actions.pop();
   }
 
-  render() {
-    const data = this.props.state.mapListData;
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    let dataSource = ds.cloneWithRows(data);
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Button style={styles.logintext} onPress={this.back}>返回</Button>
-          <TextInput
-            placeholderTextColor="#E0E0E0"
-            style={styles.textinput}
-            underlineColorAndroid="transparent"
-            keyboardType="default"
-          />
-          <Button style={styles.search} onPress={this.back}>地图</Button>
-        </View>
-        <ListView
-          enableEmptySections
-          onEndReached={this.getAllList}
-          onEndReachedThreshold={20}
-          dataSource={dataSource}
-          renderRow={(rowData) =>
-          <View style={styles.row}>
-           {this.renderList(rowData)}
-          </View>
-            }
-        />
-        <Modal
-          position={"bottom"}
-          isOpen={this.state.isOpen}
-          style={[styles.modalStyle, styles.modalHeight]}
-          backdrop={false}
-          swipeArea={20}
-        >
-          <View style={styles.subView}>
-            {
-              this.state.newLinkUrls.map(
-                (linkUrl, index) =>
-                  (<View key={index}>
-                    <TouchableHighlight
-                      underlayColor="transparent"
-                      key={index}
-                      onPress={() => { this.openMapUrl(index); }} style={styles.buttonStyle}
-                    >
-                      <Text key={index} style={styles.buttonText}>
-                        {linkUrl.name}
-                      </Text>
-
-                    </TouchableHighlight>
-                    {
-                      index < this.state.newLinkUrls.length - 1 ?
-                        (<View style={styles.horizontalLine}/>) : (<View />)
-                    }
-                  </View>)
-              )
-            }
-          </View>
-        </Modal>
-      </View>
-    );
-  }
-
   renderList(data) {
+    let imageSrc = null;
+    switch (data.carBrand) {
+      case '348D':
+        imageSrc = require('../../image/tesla.png');
+        break;
+      case '400F':
+        imageSrc = require('../../image/bmw.png');
+        break;
+      case '3701':
+        imageSrc = require('../../image/tengshi.png');
+        break;
+      default:
+        break;
+    }
     return (
       <View style={styles.subView}>
         <View style={{ flexDirection: 'row', marginTop: 5 }}>
@@ -282,15 +234,7 @@ class listView extends Component {
           <View>
             <View style={{ flexDirection: 'row' }}>
               <Image
-                source={
-                     data.carBrand === '348D' ?
-                    require('../../image/tesla.png') :
-                     data.carBrand === '400F' ?
-                      require('../../image/bmw.png') :
-                      data.carBrand === '3701' ?
-                      require('../../image/tengshi.png') :
-                       require('../../image/tesla.png')
-                    }
+                source={imageSrc}
               />
             </View>
           </View>
@@ -356,6 +300,67 @@ class listView extends Component {
             </Text>
           </TouchableHighlight>
         </View>
+      </View>
+    );
+  }
+
+  render() {
+    const data = this.props.state.mapListData;
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    const dataSource = ds.cloneWithRows(data);
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Button style={styles.logintext} onPress={this.back}>返回</Button>
+          <TextInput
+            placeholderTextColor="#E0E0E0"
+            style={styles.textinput}
+            underlineColorAndroid="transparent"
+            keyboardType="default"
+          />
+          <Button style={styles.search} onPress={this.back}>地图</Button>
+        </View>
+        <ListView
+          enableEmptySections
+          onEndReached={this.getAllList}
+          onEndReachedThreshold={20}
+          dataSource={dataSource}
+          renderRow={(rowData) =>
+            <View style={styles.row}>{
+              this.renderList(rowData)}
+            </View>
+          }
+        />
+        <Modal
+          position={"bottom"}
+          isOpen={this.state.isOpen}
+          style={[styles.modalStyle, styles.modalHeight]}
+          backdrop={false}
+          swipeArea={20}
+        >
+          <View style={styles.subView}>
+            {
+              this.state.newLinkUrls.map(
+                (linkUrl, index) =>
+                  (<View key={index}>
+                    <TouchableHighlight
+                      underlayColor="transparent"
+                      key={index}
+                      onPress={() => { this.openMapUrl(index); }} style={styles.buttonStyle}
+                    >
+                      <Text key={index} style={styles.buttonText}>
+                        {linkUrl.name}
+                      </Text>
+                    </TouchableHighlight>
+                      {
+                        index < this.state.newLinkUrls.length - 1 ?
+                          (<View style={styles.horizontalLine}/>) : (<View />)
+                       }
+                  </View>)
+                )
+            }
+          </View>
+        </Modal>
       </View>
     );
   }

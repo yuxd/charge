@@ -12,11 +12,11 @@ const initialState = {
 };
 const chargeListReducer = handleActions({
   [SearchActions.setChargeMapList]: (state, action) => {
-    state = Object.assign({}, state);
-    const oriData = state.mapListData;
-    state.mapListData = oriData.concat(action.payload.data);
-    state.total = action.payload.total;
-    return state;
+    const newState = Object.assign({}, state);
+    const oriData = newState.mapListData;
+    newState.mapListData = oriData.concat(action.payload.data);
+    newState.total = action.payload.total;
+    return newState;
   },
 }, initialState);
 export default chargeListReducer;
